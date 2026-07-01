@@ -26,6 +26,17 @@ export default function Register() {
   const createRegistration = trpc.registration.create.useMutation({
     onSuccess: (data) => {
       toast.success("ลงทะเบียนสำเร็จ! กำลังไปยังหน้าชำระเงิน...");
+      // เก็บข้อมูลการลงทะเบียนใน sessionStorage เพื่อใช้ในหน้า Payment
+      sessionStorage.setItem('registrationData', JSON.stringify({
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        email: formData.email,
+        phone: formData.phone,
+        courseType: formData.courseType,
+        trainingDate: formData.trainingDate,
+        numberOfParticipants: parseInt(formData.numberOfParticipants),
+        totalPrice: totalPrice,
+      }));
       setTimeout(() => {
         setLocation("/payment");
       }, 1500);

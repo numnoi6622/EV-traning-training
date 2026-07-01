@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -7,10 +7,22 @@ import { Link, useLocation } from "wouter";
 import { ArrowLeft, Loader2, CheckCircle } from "lucide-react";
 import { toast } from "sonner";
 
+interface RegistrationData {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  courseType: string;
+  trainingDate: string;
+  numberOfParticipants: number;
+  totalPrice: number;
+}
+
 export default function Payment() {
   const [, setLocation] = useLocation();
   const [isProcessing, setIsProcessing] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [registrationData, setRegistrationData] = useState<RegistrationData | null>(null);
   const [formData, setFormData] = useState({
     cardNumber: "",
     cardName: "",
@@ -32,6 +44,13 @@ export default function Payment() {
 
     setFormData(prev => ({ ...prev, [name]: formattedValue }));
   };
+
+  useEffect(() => {
+    const data = sessionStorage.getItem('registrationData');
+    if (data) {
+      setRegistrationData(JSON.parse(data));
+    }
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -166,7 +185,7 @@ export default function Payment() {
                 <div className="space-y-4 rounded-lg bg-secondary p-4">
                   <div className="text-sm">
                     <p className="text-muted-foreground">ยอดชำระเงิน</p>
-                    <p className="text-2xl font-bold text-accent">0 บาท</p>
+                    <p className="text-2xl font-bold text-accent">{registrationData?.totalPrice.toLocaleString('th-TH') || '0'} บาท</p>
                   </div>
                 </div>
 

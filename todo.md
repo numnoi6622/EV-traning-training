@@ -16,8 +16,8 @@
 - [x] เชื่อมกับ tRPC API สำหรับลงทะเบียน
 - [x] เพิ่ม tRPC procedures สำหรับลงทะเบียน
 - [x] สร้างหน้า Payment page
-- [x] เชื่อมกับ Payment form
-- [x] ทดสอบการลงทะเบียนและชำระเงิน
+- [x] เชื่อมกับ Payment form กับข้อมูลการลงทะเบียน
+- [x] ทดสอบการลงทะเบียน และชำระเงิน
 
 ## Phase 6: Admin Dashboard
 - [x] สร้าง Admin Dashboard layout
