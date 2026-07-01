@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ChevronDown, Zap, Wrench, Lightbulb, TrendingUp, Users } from "lucide-react";
+import { Link } from "wouter";
 
 export default function Home() {
   const [expandedDay, setExpandedDay] = useState<number | null>(1);
@@ -16,9 +17,11 @@ export default function Home() {
             <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-primary to-accent">
               <Zap className="h-6 w-6 text-white" />
             </div>
-            <h1 className="text-xl font-bold text-foreground">EV Research & Training</h1>
+            <h1 className="text-xl font-bold text-foreground">อบรมเทคโนโลยีรถไฟฟ้า</h1>
           </div>
-          <Button variant="outline" size="sm">Get Started</Button>
+          <Link href="/register">
+            <Button variant="outline" size="sm">เริ่มต้น</Button>
+          </Link>
         </div>
       </header>
 
@@ -26,15 +29,17 @@ export default function Home() {
         <div className="container relative z-10 space-y-6">
           <div className="space-y-4">
             <h2 className="text-4xl font-bold leading-tight text-foreground md:text-5xl">
-              Master Electric Vehicle Technology
+              เรียนรู้เทคโนโลยีรถไฟฟ้า
             </h2>
             <p className="max-w-2xl text-lg text-muted-foreground">
-              Research-backed 3-day training programs designed for technicians and EV enthusiasts.
+              หลักสูตรอบรม 3-5 วัน ออกแบบมาสำหรับช่างซ่อม ช่างติดตั้ง และผู้สนใจรถไฟฟ้า
             </p>
           </div>
           <div className="flex gap-4">
-            <Button size="lg" className="bg-primary hover:bg-primary/90">Explore Curriculum</Button>
-            <Button size="lg" variant="outline">View Research</Button>
+            <Link href="/register">
+              <Button size="lg" className="bg-primary hover:bg-primary/90">ลงทะเบียนเลย</Button>
+            </Link>
+            <Button size="lg" variant="outline">ดูผลการวิจัย</Button>
           </div>
         </div>
       </section>
@@ -44,9 +49,9 @@ export default function Home() {
           <div className="space-y-2">
             <h2 className="flex items-center gap-2 text-3xl font-bold text-foreground">
               <TrendingUp className="h-8 w-8 text-accent" />
-              What Professionals Want to Know
+              สิ่งที่ผู้เชี่ยวชาญต้องการรู้
             </h2>
-            <p className="text-muted-foreground">Analysis of social media discussions from Facebook, X, and Pantip</p>
+            <p className="text-muted-foreground">ผลการวิจัยจากสังคมออนไลน์ Facebook, X, และ Pantip</p>
           </div>
 
           <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
@@ -54,15 +59,15 @@ export default function Home() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Wrench className="h-5 w-5 text-accent" />
-                  Repair Technicians
+                  ช่างซ่อมรถไฟฟ้า
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 {[
-                  { label: "High Voltage Safety", percentage: 95 },
-                  { label: "Battery Repair Skills", percentage: 88 },
-                  { label: "Diagnostic Tools", percentage: 82 },
-                  { label: "Thermal Management", percentage: 76 },
+                  { label: "ความปลอดภัยไฟแรงสูง", percentage: 95 },
+                  { label: "ทักษะการซ่อมแบตเตอรี่", percentage: 88 },
+                  { label: "เครื่องมือวิเคราะห์", percentage: 82 },
+                  { label: "การจัดการความร้อน", percentage: 76 },
                 ].map((finding, idx) => (
                   <div key={idx} className="space-y-2">
                     <div className="flex justify-between text-sm">
@@ -84,15 +89,15 @@ export default function Home() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Lightbulb className="h-5 w-5 text-accent" />
-                  Charging Specialists
+                  ช่างติดตั้งตู้ชาร์จ
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 {[
-                  { label: "Installation Standards", percentage: 92 },
-                  { label: "Meter Upgrading", percentage: 85 },
-                  { label: "Safety Devices", percentage: 89 },
-                  { label: "Battery Longevity", percentage: 78 },
+                  { label: "มาตรฐานการติดตั้ง", percentage: 92 },
+                  { label: "อัปเกรดมิเตอร์", percentage: 85 },
+                  { label: "อุปกรณ์ป้องกัน", percentage: 89 },
+                  { label: "การขยายอายุแบตเตอรี่", percentage: 78 },
                 ].map((finding, idx) => (
                   <div key={idx} className="space-y-2">
                     <div className="flex justify-between text-sm">
@@ -114,15 +119,15 @@ export default function Home() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Users className="h-5 w-5 text-accent" />
-                  EV Users & Enthusiasts
+                  ผู้สนใจรถไฟฟ้า
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 {[
-                  { label: "Battery Maintenance", percentage: 92 },
-                  { label: "Charging Systems", percentage: 88 },
-                  { label: "Cost of Ownership", percentage: 85 },
-                  { label: "Real-World Range", percentage: 82 },
+                  { label: "การบำรุงรักษาแบตเตอรี่", percentage: 92 },
+                  { label: "ระบบชาร์จ", percentage: 88 },
+                  { label: "ต้นทุนการเป็นเจ้าของ", percentage: 85 },
+                  { label: "ระยะการขับขี่จริง", percentage: 82 },
                 ].map((finding, idx) => (
                   <div key={idx} className="space-y-2">
                     <div className="flex justify-between text-sm">
@@ -146,23 +151,23 @@ export default function Home() {
       <section className="border-t border-border py-16">
         <div className="container space-y-12">
           <div className="space-y-2">
-            <h2 className="text-3xl font-bold text-foreground">Training Curriculums</h2>
-            <p className="text-muted-foreground">30 hours, 3 days, hands-on experience</p>
+            <h2 className="text-3xl font-bold text-foreground">หลักสูตรอบรม</h2>
+            <p className="text-muted-foreground">30 ชั่วโมง 5 วัน การอบรมแบบปฏิบัติจริง</p>
           </div>
 
           <Tabs value={activeTrack} onValueChange={(v) => setActiveTrack(v as "repair" | "charging" | "users")}>
             <TabsList className="grid w-full max-w-lg grid-cols-3 bg-secondary">
               <TabsTrigger value="repair" className="data-[state=active]:bg-primary data-[state=active]:text-white">
                 <Wrench className="mr-2 h-4 w-4" />
-                Repair Tech
+                ช่างซ่อม
               </TabsTrigger>
               <TabsTrigger value="charging" className="data-[state=active]:bg-primary data-[state=active]:text-white">
                 <Zap className="mr-2 h-4 w-4" />
-                Charging Spec
+                ช่างติดตั้ง
               </TabsTrigger>
               <TabsTrigger value="users" className="data-[state=active]:bg-primary data-[state=active]:text-white">
                 <Users className="mr-2 h-4 w-4" />
-                EV Users
+                ผู้สนใจ
               </TabsTrigger>
             </TabsList>
 
@@ -170,57 +175,57 @@ export default function Home() {
               {[
                 {
                   day: 1,
-                  title: "High Voltage Safety & Fundamentals",
+                  title: "ความปลอดภัยไฟแรงสูง",
                   topics: [
-                    "High voltage systems in EVs (200-400V)",
-                    "Safety standards: ISO 6469 & ISO 13849",
-                    "Personal protective equipment (PPE)",
-                    "Lockout/Tagout procedures",
-                    "First aid for electrical accidents"
+                    "ระบบไฟแรงในรถไฟฟ้า (200-400V)",
+                    "มาตรฐานความปลอดภัย ISO 6469 & ISO 13849",
+                    "อุปกรณ์ป้องกันส่วนบุคคล (PPE)",
+                    "ขั้นตอนการปิดกั้นและติดป้าย",
+                    "การปฐมพยาบาลอุบัติเหตุไฟฟ้า"
                   ]
                 },
                 {
                   day: 2,
-                  title: "Battery Systems & Maintenance",
+                  title: "ระบบแบตเตอรี่และการบำรุงรักษา",
                   topics: [
-                    "Battery types: Li-ion, Li-Po, LFP",
-                    "Battery management system (BMS)",
-                    "Diagnosis and repair techniques",
-                    "Cell balancing and voltage testing",
-                    "Safety procedures for battery work"
+                    "ประเภทแบตเตอรี่: Li-ion, Li-Po, LFP",
+                    "ระบบจัดการแบตเตอรี่ (BMS)",
+                    "เทคนิคการวินิจฉัยและซ่อมแซม",
+                    "การปรับสมดุลเซลล์และการทดสอบแรงดัน",
+                    "ขั้นตอนความปลอดภัยสำหรับการทำงานกับแบตเตอรี่"
                   ]
                 },
                 {
                   day: 3,
-                  title: "Electric Motors & Drivetrain",
+                  title: "มอเตอร์ไฟฟ้าและระบบขับเคลื่อน",
                   topics: [
-                    "AC induction and DC permanent magnet motors",
-                    "Single vs dual motor systems",
-                    "Regenerative braking systems",
-                    "Motor diagnostics and troubleshooting",
-                    "Transmission and power delivery"
+                    "มอเตอร์ AC แบบเหนี่ยวนำและ DC แบบแม่เหล็กถาวร",
+                    "ระบบมอเตอร์เดี่ยวและคู่",
+                    "ระบบเบรกแบบสร้างพลังงาน",
+                    "การวินิจฉัยและแก้ไขปัญหามอเตอร์",
+                    "การส่งกำลังและการจ่ายพลังงาน"
                   ]
                 },
                 {
                   day: 4,
-                  title: "Control Systems & Diagnostic Tools",
+                  title: "ระบบควบคุมและเครื่องมือวิเคราะห์",
                   topics: [
-                    "Electronic control units (ECU/PCM)",
-                    "OBD-II and OBD-EV standards",
-                    "Using diagnostic scanners",
-                    "Digital multimeter techniques",
-                    "Fault code reading and interpretation"
+                    "หน่วยควบคุมอิเล็กทรอนิกส์ (ECU/PCM)",
+                    "มาตรฐาน OBD-II และ OBD-EV",
+                    "การใช้เครื่องสแกนเนอร์วินิจฉัย",
+                    "เทคนิคมัลติมิเตอร์ดิจิทัล",
+                    "การอ่านและตีความรหัสข้อผิดพลาด"
                   ]
                 },
                 {
                   day: 5,
-                  title: "Thermal Management & Case Studies",
+                  title: "การจัดการความร้อนและศึกษากรณีจริง",
                   topics: [
-                    "Battery cooling systems",
-                    "Motor cooling and thermal sensors",
-                    "HVAC systems in EVs",
-                    "Real-world troubleshooting cases",
-                    "Certification exam and practical testing"
+                    "ระบบระบายความร้อนแบตเตอรี่",
+                    "การระบายความร้อนมอเตอร์และเซ็นเซอร์ความร้อน",
+                    "ระบบ HVAC ในรถไฟฟ้า",
+                    "การแก้ไขปัญหาจากกรณีจริง",
+                    "การสอบและการทดสอบปฏิบัติจริง"
                   ]
                 }
               ].map((dayData) => (
@@ -232,7 +237,7 @@ export default function Home() {
                         <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/20 text-primary font-semibold">{dayData.day}</div>
                         <div>
                           <CardTitle className="text-lg">{dayData.title}</CardTitle>
-                          <CardDescription>6 hours</CardDescription>
+                          <CardDescription>6 ชั่วโมง</CardDescription>
                         </div>
                       </div>
                       <ChevronDown className={`h-5 w-5 text-muted-foreground transition-transform ${expandedDay === dayData.day ? "rotate-180" : ""}`} />
@@ -241,7 +246,7 @@ export default function Home() {
                   {expandedDay === dayData.day && (
                     <CardContent className="space-y-4 border-t border-border pt-4">
                       <div>
-                        <h4 className="mb-3 font-semibold text-accent">Topics:</h4>
+                        <h4 className="mb-3 font-semibold text-accent">หัวข้อเรียน:</h4>
                         <ul className="space-y-2">
                           {dayData.topics.map((topic, idx) => (
                             <li key={idx} className="flex items-start gap-2 text-sm text-muted-foreground">
@@ -261,57 +266,57 @@ export default function Home() {
               {[
                 {
                   day: 1,
-                  title: "Installation Standards & Safety",
+                  title: "มาตรฐานการติดตั้งและความปลอดภัย",
                   topics: [
-                    "EV charging types: Level 1, 2, DC Fast",
-                    "IEC 61851 & IEC 62196 standards",
-                    "Thai electrical standards (TISI)",
-                    "Safety procedures and PPE",
-                    "Site assessment and planning"
+                    "ประเภทการชาร์จ: Level 1, 2, DC Fast",
+                    "มาตรฐาน IEC 61851 & IEC 62196",
+                    "มาตรฐานไฟฟ้าของไทย (TISI)",
+                    "ขั้นตอนความปลอดภัยและ PPE",
+                    "การประเมินสถานที่และการวางแผน"
                   ]
                 },
                 {
                   day: 2,
-                  title: "Meter Upgrade & Electrical Systems",
+                  title: "อัปเกรดมิเตอร์และระบบไฟฟ้า",
                   topics: [
-                    "Single-phase vs three-phase systems",
-                    "Power requirement calculations",
-                    "Meter upgrade procedures",
-                    "Electrical authority coordination",
-                    "Cable sizing and protection devices"
+                    "ระบบเฟสเดี่ยวและสามเฟส",
+                    "การคำนวณความต้องการพลังงาน",
+                    "ขั้นตอนการอัปเกรดมิเตอร์",
+                    "การประสานงานกับหน่วยงานไฟฟ้า",
+                    "การเลือกขนาดสายและอุปกรณ์ป้องกัน"
                   ]
                 },
                 {
                   day: 3,
-                  title: "Charger Installation & Safety Devices",
+                  title: "การติดตั้งตู้ชาร์จและอุปกรณ์ป้องกัน",
                   topics: [
-                    "Conduit and cable routing",
-                    "Charger mounting and wiring",
-                    "Circuit breaker installation",
-                    "RCD and surge protection",
-                    "Grounding and continuity testing"
+                    "การวางท่อและเส้นสาย",
+                    "การติดตั้งตู้ชาร์จและการเดินสาย",
+                    "การติดตั้งเบรกเกอร์",
+                    "การป้องกัน RCD และ Surge",
+                    "การต่อลงดินและการทดสอบความต่อเนื่อง"
                   ]
                 },
                 {
                   day: 4,
-                  title: "Battery Longevity & Energy Management",
+                  title: "การขยายอายุแบตเตอรี่และการจัดการพลังงาน",
                   topics: [
-                    "Factors affecting battery lifespan",
-                    "Smart charging strategies",
-                    "Demand response systems",
-                    "Time-of-use tariff optimization",
-                    "Solar integration possibilities"
+                    "ปัจจัยที่ส่งผลต่ออายุแบตเตอรี่",
+                    "กลยุทธ์การชาร์จอย่างชาญฉลาด",
+                    "ระบบตอบสนองต่อความต้องการ",
+                    "การเพิ่มประสิทธิภาพอัตราค่าไฟรายชั่วโมง",
+                    "ความเป็นไปได้ของการรวมพลังงานแสงอาทิตย์"
                   ]
                 },
                 {
                   day: 5,
-                  title: "Testing, Troubleshooting & Certification",
+                  title: "การทดสอบและการรับรอง",
                   topics: [
-                    "Safety testing procedures",
-                    "Voltage and resistance testing",
-                    "RCD and circuit breaker testing",
-                    "Charger functionality verification",
-                    "Certification exam and practical testing"
+                    "ขั้นตอนการทดสอบความปลอดภัย",
+                    "การทดสอบแรงดันและความต้านทาน",
+                    "การทดสอบ RCD และเบรกเกอร์",
+                    "การตรวจสอบการทำงานของตู้ชาร์จ",
+                    "การสอบและการทดสอบปฏิบัติจริง"
                   ]
                 }
               ].map((dayData) => (
@@ -323,7 +328,7 @@ export default function Home() {
                         <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-accent/20 text-accent font-semibold">{dayData.day}</div>
                         <div>
                           <CardTitle className="text-lg">{dayData.title}</CardTitle>
-                          <CardDescription>6 hours</CardDescription>
+                          <CardDescription>6 ชั่วโมง</CardDescription>
                         </div>
                       </div>
                       <ChevronDown className={`h-5 w-5 text-muted-foreground transition-transform ${expandedDay === dayData.day ? "rotate-180" : ""}`} />
@@ -332,7 +337,7 @@ export default function Home() {
                   {expandedDay === dayData.day && (
                     <CardContent className="space-y-4 border-t border-border pt-4">
                       <div>
-                        <h4 className="mb-3 font-semibold text-accent">Topics:</h4>
+                        <h4 className="mb-3 font-semibold text-accent">หัวข้อเรียน:</h4>
                         <ul className="space-y-2">
                           {dayData.topics.map((topic, idx) => (
                             <li key={idx} className="flex items-start gap-2 text-sm text-muted-foreground">
@@ -352,16 +357,16 @@ export default function Home() {
               {[
                 {
                   day: 1,
-                  title: "Complete EV User Guide (Full Day)",
+                  title: "คู่มือผู้ใช้รถไฟฟ้าที่สมบูรณ์",
                   topics: [
-                    "EV types: BEV, PHEV, HEV - pros and cons",
-                    "Battery maintenance: charging best practices",
-                    "Charging systems: Level 1, 2, DC Fast",
-                    "Finding and using public charging stations",
-                    "Total cost of ownership analysis",
-                    "Real-world range factors and planning",
-                    "Routine maintenance and safety",
-                    "Troubleshooting common issues"
+                    "ประเภทรถไฟฟ้า: BEV, PHEV, HEV - ข้อดีและข้อเสีย",
+                    "การบำรุงรักษาแบตเตอรี่: วิธีชาร์จที่ดีที่สุด",
+                    "ระบบชาร์จ: Level 1, 2, DC Fast",
+                    "การค้นหาและใช้สถานีชาร์จสาธารณะ",
+                    "การวิเคราะห์ต้นทุนการเป็นเจ้าของ",
+                    "ปัจจัยที่ส่งผลต่อระยะและการวางแผนการเดินทาง",
+                    "การบำรุงรักษาประจำและความปลอดภัย",
+                    "การแก้ไขปัญหาทั่วไป"
                   ]
                 }
               ].map((dayData) => (
@@ -373,7 +378,7 @@ export default function Home() {
                         <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/20 text-primary font-semibold">✓</div>
                         <div>
                           <CardTitle className="text-lg">{dayData.title}</CardTitle>
-                          <CardDescription>6 hours (Intensive)</CardDescription>
+                          <CardDescription>6 ชั่วโมง (เข้มข้น)</CardDescription>
                         </div>
                       </div>
                       <ChevronDown className={`h-5 w-5 text-muted-foreground transition-transform ${expandedDay === dayData.day ? "rotate-180" : ""}`} />
@@ -382,7 +387,7 @@ export default function Home() {
                   {expandedDay === dayData.day && (
                     <CardContent className="space-y-4 border-t border-border pt-4">
                       <div>
-                        <h4 className="mb-3 font-semibold text-accent">Topics Covered:</h4>
+                        <h4 className="mb-3 font-semibold text-accent">หัวข้อที่ครอบคลุม:</h4>
                         <ul className="space-y-2">
                           {dayData.topics.map((topic, idx) => (
                             <li key={idx} className="flex items-start gap-2 text-sm text-muted-foreground">
@@ -404,19 +409,21 @@ export default function Home() {
       <section className="border-t border-border bg-gradient-to-r from-primary/10 to-accent/10 py-16">
         <div className="container space-y-6 text-center">
           <div className="space-y-2">
-            <h2 className="text-3xl font-bold text-foreground">Ready to Transform Your Career?</h2>
-            <p className="text-muted-foreground">Join professionals mastering EV technology.</p>
+            <h2 className="text-3xl font-bold text-foreground">พร้อมเปลี่ยนแปลงอาชีพของคุณหรือยัง?</h2>
+            <p className="text-muted-foreground">เข้าร่วมผู้เชี่ยวชาญที่เรียนรู้เทคโนโลยีรถไฟฟ้า</p>
           </div>
           <div className="flex justify-center gap-4">
-            <Button size="lg" className="bg-primary hover:bg-primary/90">Enroll Now</Button>
-            <Button size="lg" variant="outline">Download Curriculum</Button>
+            <Link href="/register">
+              <Button size="lg" className="bg-primary hover:bg-primary/90">ลงทะเบียนเลย</Button>
+            </Link>
+            <Button size="lg" variant="outline">ดาวน์โหลดหลักสูตร</Button>
           </div>
         </div>
       </section>
 
       <footer className="border-t border-border bg-secondary py-8">
         <div className="container text-center text-sm text-muted-foreground">
-          <p>EV Research and Training Dashboard 2026</p>
+          <p>แดชบอร์ดการวิจัยและอบรมรถไฟฟ้า 2026</p>
         </div>
       </footer>
     </div>
