@@ -167,30 +167,88 @@ export default function Home() {
             </TabsList>
 
             <TabsContent value="repair" className="mt-8 space-y-4">
-              {[1, 2, 3].map((day) => (
-                <Card key={day} className="cursor-pointer border-border bg-card transition-all hover:border-primary/50"
-                  onClick={() => setExpandedDay(expandedDay === day ? null : day)}>
+              {[
+                {
+                  day: 1,
+                  title: "High Voltage Safety & Fundamentals",
+                  topics: [
+                    "High voltage systems in EVs (200-400V)",
+                    "Safety standards: ISO 6469 & ISO 13849",
+                    "Personal protective equipment (PPE)",
+                    "Lockout/Tagout procedures",
+                    "First aid for electrical accidents"
+                  ]
+                },
+                {
+                  day: 2,
+                  title: "Battery Systems & Maintenance",
+                  topics: [
+                    "Battery types: Li-ion, Li-Po, LFP",
+                    "Battery management system (BMS)",
+                    "Diagnosis and repair techniques",
+                    "Cell balancing and voltage testing",
+                    "Safety procedures for battery work"
+                  ]
+                },
+                {
+                  day: 3,
+                  title: "Electric Motors & Drivetrain",
+                  topics: [
+                    "AC induction and DC permanent magnet motors",
+                    "Single vs dual motor systems",
+                    "Regenerative braking systems",
+                    "Motor diagnostics and troubleshooting",
+                    "Transmission and power delivery"
+                  ]
+                },
+                {
+                  day: 4,
+                  title: "Control Systems & Diagnostic Tools",
+                  topics: [
+                    "Electronic control units (ECU/PCM)",
+                    "OBD-II and OBD-EV standards",
+                    "Using diagnostic scanners",
+                    "Digital multimeter techniques",
+                    "Fault code reading and interpretation"
+                  ]
+                },
+                {
+                  day: 5,
+                  title: "Thermal Management & Case Studies",
+                  topics: [
+                    "Battery cooling systems",
+                    "Motor cooling and thermal sensors",
+                    "HVAC systems in EVs",
+                    "Real-world troubleshooting cases",
+                    "Certification exam and practical testing"
+                  ]
+                }
+              ].map((dayData) => (
+                <Card key={dayData.day} className="cursor-pointer border-border bg-card transition-all hover:border-primary/50"
+                  onClick={() => setExpandedDay(expandedDay === dayData.day ? null : dayData.day)}>
                   <CardHeader>
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-4">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/20 text-primary font-semibold">{day}</div>
+                        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/20 text-primary font-semibold">{dayData.day}</div>
                         <div>
-                          <CardTitle className="text-lg">Day {day} Topics</CardTitle>
-                          <CardDescription>10 hours</CardDescription>
+                          <CardTitle className="text-lg">{dayData.title}</CardTitle>
+                          <CardDescription>6 hours</CardDescription>
                         </div>
                       </div>
-                      <ChevronDown className={`h-5 w-5 text-muted-foreground transition-transform ${expandedDay === day ? "rotate-180" : ""}`} />
+                      <ChevronDown className={`h-5 w-5 text-muted-foreground transition-transform ${expandedDay === dayData.day ? "rotate-180" : ""}`} />
                     </div>
                   </CardHeader>
-                  {expandedDay === day && (
+                  {expandedDay === dayData.day && (
                     <CardContent className="space-y-4 border-t border-border pt-4">
                       <div>
                         <h4 className="mb-3 font-semibold text-accent">Topics:</h4>
                         <ul className="space-y-2">
-                          <li className="flex items-start gap-2 text-sm text-muted-foreground">
-                            <span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-accent flex-shrink-0" />
-                            Sample Topic {day}
-                          </li>
+                          {dayData.topics.map((topic, idx) => (
+                            <li key={idx} className="flex items-start gap-2 text-sm text-muted-foreground">
+                              <span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-accent flex-shrink-0" />
+                              {topic}
+                            </li>
+                          ))}
                         </ul>
                       </div>
                     </CardContent>
@@ -200,30 +258,88 @@ export default function Home() {
             </TabsContent>
 
             <TabsContent value="charging" className="mt-8 space-y-4">
-              {[1, 2, 3].map((day) => (
-                <Card key={day} className="cursor-pointer border-border bg-card transition-all hover:border-primary/50"
-                  onClick={() => setExpandedDay(expandedDay === day ? null : day)}>
+              {[
+                {
+                  day: 1,
+                  title: "Installation Standards & Safety",
+                  topics: [
+                    "EV charging types: Level 1, 2, DC Fast",
+                    "IEC 61851 & IEC 62196 standards",
+                    "Thai electrical standards (TISI)",
+                    "Safety procedures and PPE",
+                    "Site assessment and planning"
+                  ]
+                },
+                {
+                  day: 2,
+                  title: "Meter Upgrade & Electrical Systems",
+                  topics: [
+                    "Single-phase vs three-phase systems",
+                    "Power requirement calculations",
+                    "Meter upgrade procedures",
+                    "Electrical authority coordination",
+                    "Cable sizing and protection devices"
+                  ]
+                },
+                {
+                  day: 3,
+                  title: "Charger Installation & Safety Devices",
+                  topics: [
+                    "Conduit and cable routing",
+                    "Charger mounting and wiring",
+                    "Circuit breaker installation",
+                    "RCD and surge protection",
+                    "Grounding and continuity testing"
+                  ]
+                },
+                {
+                  day: 4,
+                  title: "Battery Longevity & Energy Management",
+                  topics: [
+                    "Factors affecting battery lifespan",
+                    "Smart charging strategies",
+                    "Demand response systems",
+                    "Time-of-use tariff optimization",
+                    "Solar integration possibilities"
+                  ]
+                },
+                {
+                  day: 5,
+                  title: "Testing, Troubleshooting & Certification",
+                  topics: [
+                    "Safety testing procedures",
+                    "Voltage and resistance testing",
+                    "RCD and circuit breaker testing",
+                    "Charger functionality verification",
+                    "Certification exam and practical testing"
+                  ]
+                }
+              ].map((dayData) => (
+                <Card key={dayData.day} className="cursor-pointer border-border bg-card transition-all hover:border-primary/50"
+                  onClick={() => setExpandedDay(expandedDay === dayData.day ? null : dayData.day)}>
                   <CardHeader>
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-4">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-accent/20 text-accent font-semibold">{day}</div>
+                        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-accent/20 text-accent font-semibold">{dayData.day}</div>
                         <div>
-                          <CardTitle className="text-lg">Day {day} Topics</CardTitle>
-                          <CardDescription>10 hours</CardDescription>
+                          <CardTitle className="text-lg">{dayData.title}</CardTitle>
+                          <CardDescription>6 hours</CardDescription>
                         </div>
                       </div>
-                      <ChevronDown className={`h-5 w-5 text-muted-foreground transition-transform ${expandedDay === day ? "rotate-180" : ""}`} />
+                      <ChevronDown className={`h-5 w-5 text-muted-foreground transition-transform ${expandedDay === dayData.day ? "rotate-180" : ""}`} />
                     </div>
                   </CardHeader>
-                  {expandedDay === day && (
+                  {expandedDay === dayData.day && (
                     <CardContent className="space-y-4 border-t border-border pt-4">
                       <div>
                         <h4 className="mb-3 font-semibold text-accent">Topics:</h4>
                         <ul className="space-y-2">
-                          <li className="flex items-start gap-2 text-sm text-muted-foreground">
-                            <span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-accent flex-shrink-0" />
-                            Sample Topic {day}
-                          </li>
+                          {dayData.topics.map((topic, idx) => (
+                            <li key={idx} className="flex items-start gap-2 text-sm text-muted-foreground">
+                              <span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-accent flex-shrink-0" />
+                              {topic}
+                            </li>
+                          ))}
                         </ul>
                       </div>
                     </CardContent>
@@ -233,30 +349,47 @@ export default function Home() {
             </TabsContent>
 
             <TabsContent value="users" className="mt-8 space-y-4">
-              {[1, 2, 3].map((day) => (
-                <Card key={day} className="cursor-pointer border-border bg-card transition-all hover:border-primary/50"
-                  onClick={() => setExpandedDay(expandedDay === day ? null : day)}>
+              {[
+                {
+                  day: 1,
+                  title: "Complete EV User Guide (Full Day)",
+                  topics: [
+                    "EV types: BEV, PHEV, HEV - pros and cons",
+                    "Battery maintenance: charging best practices",
+                    "Charging systems: Level 1, 2, DC Fast",
+                    "Finding and using public charging stations",
+                    "Total cost of ownership analysis",
+                    "Real-world range factors and planning",
+                    "Routine maintenance and safety",
+                    "Troubleshooting common issues"
+                  ]
+                }
+              ].map((dayData) => (
+                <Card key={dayData.day} className="cursor-pointer border-border bg-card transition-all hover:border-primary/50"
+                  onClick={() => setExpandedDay(expandedDay === dayData.day ? null : dayData.day)}>
                   <CardHeader>
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-4">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/20 text-primary font-semibold">{day}</div>
+                        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/20 text-primary font-semibold">✓</div>
                         <div>
-                          <CardTitle className="text-lg">Day {day} Topics</CardTitle>
-                          <CardDescription>10 hours</CardDescription>
+                          <CardTitle className="text-lg">{dayData.title}</CardTitle>
+                          <CardDescription>6 hours (Intensive)</CardDescription>
                         </div>
                       </div>
-                      <ChevronDown className={`h-5 w-5 text-muted-foreground transition-transform ${expandedDay === day ? "rotate-180" : ""}`} />
+                      <ChevronDown className={`h-5 w-5 text-muted-foreground transition-transform ${expandedDay === dayData.day ? "rotate-180" : ""}`} />
                     </div>
                   </CardHeader>
-                  {expandedDay === day && (
+                  {expandedDay === dayData.day && (
                     <CardContent className="space-y-4 border-t border-border pt-4">
                       <div>
-                        <h4 className="mb-3 font-semibold text-accent">Topics:</h4>
+                        <h4 className="mb-3 font-semibold text-accent">Topics Covered:</h4>
                         <ul className="space-y-2">
-                          <li className="flex items-start gap-2 text-sm text-muted-foreground">
-                            <span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-accent flex-shrink-0" />
-                            Sample Topic {day}
-                          </li>
+                          {dayData.topics.map((topic, idx) => (
+                            <li key={idx} className="flex items-start gap-2 text-sm text-muted-foreground">
+                              <span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-accent flex-shrink-0" />
+                              {topic}
+                            </li>
+                          ))}
                         </ul>
                       </div>
                     </CardContent>
