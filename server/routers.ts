@@ -1,8 +1,17 @@
 import { COOKIE_NAME } from "@shared/const";
 import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
-import { publicProcedure, router } from "./_core/trpc";
+import { publicProcedure, protectedProcedure, router } from "./_core/trpc";
 import { z } from "zod";
+import { TRPCError } from "@trpc/server";
+
+// Admin-only procedure
+const adminProcedure = protectedProcedure.use(({ ctx, next }) => {
+  if (ctx.user.role !== "admin") {
+    throw new TRPCError({ code: "FORBIDDEN", message: "ไม่มีสิทธิ์เข้าถึง" });
+  }
+  return next({ ctx });
+});
 
 export const appRouter = router({
   system: systemRouter,
@@ -50,15 +59,30 @@ export const appRouter = router({
           throw new Error("ไม่สามารถลงทะเบียนได้");
         }
       }),
-    list: publicProcedure.query(async () => {
+    list: adminProcedure.query(async () => {
       const { getRegistrations } = await import("./db");
       return await getRegistrations();
     }),
-    getById: publicProcedure
+    getById: adminProcedure
       .input(z.number())
       .query(async ({ input }) => {
         const { getRegistrationById } = await import("./db");
         return await getRegistrationById(input);
+      }),
+    updatePaymentStatus: adminProcedure
+      .input(z.object({
+        id: z.number(),
+        status: z.enum(["pending", "completed", "failed"]),
+      }))
+      .mutation(async ({ input }) => {
+        const { updateRegistrationPaymentStatus } = await import("./db");
+        try {
+          await updateRegistrationPaymentStatus(input.id, input.status);
+          return { success: true, message: "อัปเดตสถานะสำเร็จ" };
+        } catch (error) {
+          console.error("Update payment status error:", error);
+          throw new Error("ไม่สามารถอัปเดตสถานะได้");
+        }
       }),
   }),
 });

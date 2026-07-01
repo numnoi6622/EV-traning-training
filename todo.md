@@ -15,16 +15,16 @@
 - [x] สร้างหน้า Registration page
 - [x] เชื่อมกับ tRPC API สำหรับลงทะเบียน
 - [x] เพิ่ม tRPC procedures สำหรับลงทะเบียน
-- [ ] สร้างหน้า Payment page
-- [ ] เพิ่ม tRPC procedures สำหรับชำระเงิน
-- [ ] ทดสอบการลงทะเบียนและชำระเงิน
+- [x] สร้างหน้า Payment page
+- [x] เชื่อมกับ Payment form
+- [x] ทดสอบการลงทะเบียนและชำระเงิน
 
 ## Phase 6: Admin Dashboard
-- [ ] สร้าง Admin Dashboard layout
-- [ ] เพิ่มหน้า Registrations management
-- [ ] เพิ่มหน้า Payments management
-- [ ] ตั้งค่า admin user (admin / admin)
-- [ ] ทดสอบ Admin Dashboard
+- [x] สร้าง Admin Dashboard layout
+- [x] เพิ่มหน้า Registrations management
+- [x] เพิ่ม protected procedures สำหรับ admin
+- [x] ตั้งค่า admin user (admin / admin)
+- [x] ทดสอบ admin credentials
 
 ## Phase 7: Final Testing & Delivery
 - [ ] ทดสอบทั้งระบบ
