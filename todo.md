@@ -27,6 +27,12 @@
 - [x] ทดสอบ admin credentials
 
 ## Phase 7: Final Testing & Delivery
-- [ ] ทดสอบทั้งระบบ
-- [ ] บันทึก checkpoint สุดท้าย
-- [ ] นำเสนอผลลัพธ์ให้ผู้ใช้
+- [x] ทดสอบทั้งระบบ
+- [x] บันทึก checkpoint สุดท้าย
+- [x] นำเสนอผลลัพธ์ให้ผู้ใช้
+
+## Phase 8: Admin Login System
+- [x] สร้างหน้า Login page สำหรับ admin (username/password)
+- [x] เพิ่ม tRPC procedure สำหรับ login verification
+- [x] เพิ่ม session management สำหรับ admin
+- [x] ทดสอบ admin login flow

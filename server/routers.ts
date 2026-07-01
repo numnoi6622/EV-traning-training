@@ -24,6 +24,26 @@ export const appRouter = router({
         success: true,
       } as const;
     }),
+    adminLogin: publicProcedure
+      .input(z.object({
+        username: z.string(),
+        password: z.string(),
+      }))
+      .mutation(({ input, ctx }) => {
+        const adminUsername = process.env.ADMIN_USERNAME || "admin";
+        const adminPassword = process.env.ADMIN_PASSWORD || "admin";
+        
+        if (input.username !== adminUsername || input.password !== adminPassword) {
+          throw new TRPCError({ code: "UNAUTHORIZED", message: "ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง" });
+        }
+        
+        // Set admin session cookie
+        const cookieOptions = getSessionCookieOptions(ctx.req);
+        const adminToken = Buffer.from(JSON.stringify({ role: "admin", username: adminUsername })).toString("base64");
+        ctx.res.setHeader("Set-Cookie", `admin-session=${adminToken}; ${Object.entries(cookieOptions).map(([k, v]) => `${k}=${v}`).join("; ")}`);
+        
+        return { success: true, message: "เข้าสู่ระบบสำเร็จ" };
+      }),
   }),
 
   registration: router({

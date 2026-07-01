@@ -19,9 +19,14 @@ export default function Home() {
             </div>
             <h1 className="text-xl font-bold text-foreground">อบรมเทคโนโลยีรถไฟฟ้า</h1>
           </div>
-          <Link href="/register">
-            <Button variant="outline" size="sm">เริ่มต้น</Button>
-          </Link>
+          <div className="flex gap-2">
+            <Link href="/admin-login">
+              <Button variant="ghost" size="sm" className="text-xs">Admin</Button>
+            </Link>
+            <Link href="/register">
+              <Button variant="outline" size="sm">เริ่มต้น</Button>
+            </Link>
+          </div>
         </div>
       </header>
 
