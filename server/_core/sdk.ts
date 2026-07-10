@@ -3,7 +3,7 @@ import { ForbiddenError } from "../../shared/_core/errors";
 import axios, { type AxiosInstance } from "axios";
 import { parse as parseCookieHeader } from "cookie";
 import type { Request } from "express";
-import { SignJWT, jwtVerify } from "jose";
+
 import type { User } from "../../drizzle/schema";
 import * as db from "../db";
 import { ENV } from "./env";
@@ -187,6 +187,7 @@ class SDKServer {
     const expirationSeconds = Math.floor((issuedAt + expiresInMs) / 1000);
     const secretKey = this.getSessionSecret();
 
+    const { SignJWT } = await import("jose");
     return new SignJWT({
       openId: payload.openId,
       appId: payload.appId,
@@ -206,6 +207,7 @@ class SDKServer {
     }
 
     try {
+      const { jwtVerify } = await import("jose");
       const secretKey = this.getSessionSecret();
       const { payload } = await jwtVerify(cookieValue, secretKey, {
         algorithms: ["HS256"],
