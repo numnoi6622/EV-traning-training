@@ -5,6 +5,8 @@ import { registerOAuthRoutes } from "../server/_core/oauth";
 import { registerStorageProxy } from "../server/_core/storageProxy";
 import { appRouter } from "../server/routers";
 import { createContext } from "../server/_core/context";
+import { getDb } from "../server/db";
+import { sql } from "drizzle-orm";
 
 const app = express();
 app.use(express.json({ limit: "50mb" }));
@@ -21,10 +23,12 @@ app.use(
   })
 );
 
+app.get("/api/ping", (req, res) => {
+  res.json({ message: "pong" });
+});
+
 app.get("/api/migrate-db", async (req, res) => {
   try {
-    const { getDb } = await import("../server/db");
-    const { sql } = await import("drizzle-orm");
     const db = await getDb();
     if (!db) {
       return res.status(500).json({ error: "No DB connection" });

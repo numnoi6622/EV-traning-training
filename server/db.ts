@@ -13,6 +13,9 @@ export async function getDb() {
     try {
       if (!_pool) {
         _pool = mysql.createPool(process.env.DATABASE_URL);
+        _pool.on('error', (err) => {
+          console.error('[mysql2 pool error]', err);
+        });
       }
       _db = drizzle(_pool);
     } catch (error) {
