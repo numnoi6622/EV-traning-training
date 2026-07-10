@@ -26,7 +26,19 @@ export default function AdminDashboard() {
     }
   }, [user, setLocation]);
 
-  const { data: registrations, isLoading } = trpc.registration.list.useQuery();
+  const { data: registrations, isLoading, refetch } = trpc.registration.list.useQuery();
+  
+  const updateStatus = trpc.registration.updatePaymentStatus.useMutation({
+    onSuccess: () => {
+      toast.success("อัปเดตสถานะสำเร็จ");
+      refetch();
+    },
+    onError: () => toast.error("เกิดข้อผิดพลาดในการอัปเดตสถานะ")
+  });
+
+  const handleApprove = (id: number) => {
+    updateStatus.mutate({ id, status: "completed" });
+  };
 
   const courseTypeLabels: Record<string, string> = {
     repair: "ช่างซ่อมรถไฟฟ้า",
@@ -201,6 +213,7 @@ export default function AdminDashboard() {
                       <TableHead className="text-right">จำนวนคน</TableHead>
                       <TableHead className="text-right">ราคารวม</TableHead>
                       <TableHead>สถานะ</TableHead>
+                      <TableHead>จัดการ</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -229,6 +242,30 @@ export default function AdminDashboard() {
                           <Badge className={paymentStatusColors[reg.paymentStatus]}>
                             {paymentStatusLabels[reg.paymentStatus]}
                           </Badge>
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex flex-col gap-2 items-start">
+                            {reg.paymentSlipUrl && (
+                              <Button 
+                                variant="outline" 
+                                size="sm" 
+                                className="w-full text-xs" 
+                                onClick={() => window.open(reg.paymentSlipUrl, "_blank")}
+                              >
+                                ดูสลิป
+                              </Button>
+                            )}
+                            {reg.paymentStatus === "pending" && (
+                              <Button 
+                                size="sm" 
+                                className="w-full text-xs bg-green-600 hover:bg-green-700 text-white" 
+                                onClick={() => handleApprove(reg.id)} 
+                                disabled={updateStatus.isPending}
+                              >
+                                ยืนยันชำระเงิน
+                              </Button>
+                            )}
+                          </div>
                         </TableCell>
                       </TableRow>
                     ))}

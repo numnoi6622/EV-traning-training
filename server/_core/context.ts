@@ -16,8 +16,32 @@ export async function createContext(
   try {
     user = await sdk.authenticateRequest(opts.req);
   } catch (error) {
-    // Authentication is optional for public procedures.
     user = null;
+  }
+
+  // Fallback to check for local admin-session cookie
+  if (!user && opts.req.headers.cookie) {
+    const match = opts.req.headers.cookie.match(/admin-session=([^;]+)/);
+    if (match) {
+      try {
+        const decoded = JSON.parse(Buffer.from(match[1], "base64").toString());
+        if (decoded.role === "admin") {
+          user = {
+            id: -1,
+            openId: "admin",
+            name: decoded.username || "Admin",
+            email: null,
+            loginMethod: "local",
+            role: "admin",
+            createdAt: new Date(),
+            updatedAt: new Date(),
+            lastSignedIn: new Date()
+          } as any;
+        }
+      } catch (e) {
+        // Ignore parse error
+      }
+    }
   }
 
   return {

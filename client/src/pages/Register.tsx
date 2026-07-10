@@ -23,28 +23,8 @@ export default function Register() {
     notes: "",
   });
 
-  const createRegistration = trpc.registration.create.useMutation({
-    onSuccess: (data) => {
-      toast.success("ลงทะเบียนสำเร็จ! กำลังไปยังหน้าชำระเงิน...");
-      // เก็บข้อมูลการลงทะเบียนใน sessionStorage เพื่อใช้ในหน้า Payment
-      sessionStorage.setItem('registrationData', JSON.stringify({
-        firstName: formData.firstName,
-        lastName: formData.lastName,
-        email: formData.email,
-        phone: formData.phone,
-        courseType: formData.courseType,
-        trainingDate: formData.trainingDate,
-        numberOfParticipants: parseInt(formData.numberOfParticipants),
-        totalPrice: totalPrice,
-      }));
-      setTimeout(() => {
-        setLocation("/payment");
-      }, 1500);
-    },
-    onError: (error) => {
-      toast.error(error.message || "เกิดข้อผิดพลาดในการลงทะเบียน");
-    },
-  });
+  // Mutation moved to Payment.tsx
+  const isPending = false;
 
   const courseTypes = [
     { value: "repair", label: "ช่างซ่อมรถไฟฟ้า (5 วัน)" },
@@ -93,17 +73,22 @@ export default function Register() {
       return;
     }
 
-    createRegistration.mutate({
+    sessionStorage.setItem('registrationData', JSON.stringify({
       firstName: formData.firstName,
       lastName: formData.lastName,
       email: formData.email,
       phone: formData.phone,
-      courseType: formData.courseType as "repair" | "charging" | "users",
+      courseType: formData.courseType,
       trainingDate: formData.trainingDate,
       numberOfParticipants: parseInt(formData.numberOfParticipants),
       totalPrice: totalPrice,
       notes: formData.notes || undefined,
-    });
+    }));
+    
+    toast.success("กำลังไปยังหน้าชำระเงิน...");
+    setTimeout(() => {
+      setLocation("/payment");
+    }, 1000);
   };
 
   return (

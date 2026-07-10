@@ -4,8 +4,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Link, useLocation } from "wouter";
-import { ArrowLeft, Loader2, CheckCircle } from "lucide-react";
+import { ArrowLeft, Loader2, CheckCircle, UploadCloud } from "lucide-react";
 import { toast } from "sonner";
+import { trpc } from "@/lib/trpc";
 
 interface RegistrationData {
   firstName: string;
@@ -20,30 +21,22 @@ interface RegistrationData {
 
 export default function Payment() {
   const [, setLocation] = useLocation();
-  const [isProcessing, setIsProcessing] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [registrationData, setRegistrationData] = useState<RegistrationData | null>(null);
-  const [formData, setFormData] = useState({
-    cardNumber: "",
-    cardName: "",
-    expiryDate: "",
-    cvv: "",
+  const [slipImage, setSlipImage] = useState<string | null>(null);
+
+  const createRegistration = trpc.registration.create.useMutation({
+    onSuccess: () => {
+      setIsSuccess(true);
+      toast.success("ชำระเงินและลงทะเบียนสำเร็จ!");
+      setTimeout(() => {
+        setLocation("/");
+      }, 3000);
+    },
+    onError: (error) => {
+      toast.error(error.message || "เกิดข้อผิดพลาดในการบันทึกข้อมูล");
+    },
   });
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    let formattedValue = value;
-
-    if (name === "cardNumber") {
-      formattedValue = value.replace(/\s/g, "").replace(/(\d{4})/g, "$1 ").trim();
-    } else if (name === "expiryDate") {
-      formattedValue = value.replace(/\D/g, "").replace(/(\d{2})(\d{2})/, "$1/$2");
-    } else if (name === "cvv") {
-      formattedValue = value.replace(/\D/g, "").slice(0, 3);
-    }
-
-    setFormData(prev => ({ ...prev, [name]: formattedValue }));
-  };
 
   useEffect(() => {
     const data = sessionStorage.getItem('registrationData');
@@ -52,36 +45,40 @@ export default function Payment() {
     }
   }, []);
 
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    
+    if (file.size > 2 * 1024 * 1024) {
+      toast.error("ขนาดไฟล์ต้องไม่เกิน 2MB");
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      setSlipImage(event.target?.result as string);
+    };
+    reader.readAsDataURL(file);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!formData.cardNumber || !formData.cardName || !formData.expiryDate || !formData.cvv) {
-      toast.error("กรุณากรอกข้อมูลบัตรให้ครบถ้วน");
+    if (!slipImage) {
+      toast.error("กรุณาแนบหลักฐานการโอนเงิน (สลิป)");
       return;
     }
 
-    if (formData.cardNumber.replace(/\s/g, "").length !== 16) {
-      toast.error("เลขบัตรต้องมี 16 หลัก");
+    if (!registrationData) {
+      toast.error("ไม่พบข้อมูลการลงทะเบียน กรุณาทำรายการใหม่");
       return;
     }
 
-    if (formData.cvv.length !== 3) {
-      toast.error("CVV ต้องมี 3 หลัก");
-      return;
-    }
-
-    setIsProcessing(true);
-
-    // Simulate payment processing
-    setTimeout(() => {
-      setIsProcessing(false);
-      setIsSuccess(true);
-      toast.success("ชำระเงินสำเร็จ!");
-      
-      setTimeout(() => {
-        setLocation("/");
-      }, 2000);
-    }, 2000);
+    createRegistration.mutate({
+      ...registrationData,
+      courseType: registrationData.courseType as any,
+      paymentSlipUrl: slipImage, // Send base64 image
+    });
   };
 
   if (isSuccess) {
@@ -91,8 +88,8 @@ export default function Payment() {
           <CardContent className="pt-12 pb-12 text-center space-y-6">
             <CheckCircle className="h-16 w-16 text-green-500 mx-auto" />
             <div>
-              <h2 className="text-2xl font-bold text-foreground mb-2">ชำระเงินสำเร็จ!</h2>
-              <p className="text-muted-foreground">ขอบคุณที่ลงทะเบียนอบรมรถไฟฟ้า</p>
+              <h2 className="text-2xl font-bold text-foreground mb-2">บันทึกข้อมูลสำเร็จ!</h2>
+              <p className="text-muted-foreground">รอการตรวจสอบและยืนยันจากเจ้าหน้าที่</p>
             </div>
             <div className="text-sm text-muted-foreground">
               <p>กำลังกลับไปยังหน้าแรก...</p>
@@ -121,99 +118,72 @@ export default function Payment() {
         <div className="container max-w-2xl">
           <Card className="border-border bg-card">
             <CardHeader>
-              <CardTitle>ข้อมูลการชำระเงิน</CardTitle>
-              <CardDescription>กรุณากรอกข้อมูลบัตรเครดิตของคุณ</CardDescription>
+              <CardTitle>แจ้งชำระเงิน</CardTitle>
+              <CardDescription>กรุณาโอนเงินตามบัญชีด้านล่างและแนบหลักฐานการโอน</CardDescription>
             </CardHeader>
             <CardContent>
               <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="space-y-2">
-                  <Label htmlFor="cardNumber">เลขบัตรเครดิต *</Label>
-                  <Input
-                    id="cardNumber"
-                    name="cardNumber"
-                    placeholder="1234 5678 9012 3456"
-                    value={formData.cardNumber}
-                    onChange={handleChange}
-                    maxLength={19}
-                    required
-                    disabled={isProcessing}
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="cardName">ชื่อเจ้าของบัตร *</Label>
-                  <Input
-                    id="cardName"
-                    name="cardName"
-                    placeholder="John Doe"
-                    value={formData.cardName}
-                    onChange={handleChange}
-                    required
-                    disabled={isProcessing}
-                  />
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="expiryDate">วันหมดอายุ (MM/YY) *</Label>
-                    <Input
-                      id="expiryDate"
-                      name="expiryDate"
-                      placeholder="12/25"
-                      value={formData.expiryDate}
-                      onChange={handleChange}
-                      maxLength={5}
-                      required
-                      disabled={isProcessing}
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="cvv">CVV *</Label>
-                    <Input
-                      id="cvv"
-                      name="cvv"
-                      placeholder="123"
-                      value={formData.cvv}
-                      onChange={handleChange}
-                      maxLength={3}
-                      required
-                      disabled={isProcessing}
-                    />
-                  </div>
+                
+                {/* Bank Account Info Mock */}
+                <div className="p-6 bg-secondary/50 rounded-lg text-center space-y-4 border border-border">
+                  <h3 className="font-semibold text-lg">ธนาคารกสิกรไทย</h3>
+                  <p className="text-2xl font-mono tracking-widest font-bold">123-4-56789-0</p>
+                  <p className="text-muted-foreground">ชื่อบัญชี: บจก. EV Training</p>
                 </div>
 
                 <div className="space-y-4 rounded-lg bg-secondary p-4">
                   <div className="text-sm">
-                    <p className="text-muted-foreground">ยอดชำระเงิน</p>
+                    <p className="text-muted-foreground">ยอดที่ต้องชำระ</p>
                     <p className="text-2xl font-bold text-accent">{registrationData?.totalPrice.toLocaleString('th-TH') || '0'} บาท</p>
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="slipImage">แนบสลิปโอนเงิน *</Label>
+                  <div className="border-2 border-dashed border-border rounded-lg p-8 text-center hover:bg-secondary/50 transition-colors cursor-pointer relative">
+                    <Input 
+                      type="file" 
+                      id="slipImage"
+                      accept="image/*"
+                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                      onChange={handleImageUpload}
+                      disabled={createRegistration.isPending}
+                    />
+                    {slipImage ? (
+                      <div className="space-y-4">
+                        <img src={slipImage} alt="Payment Slip" className="max-h-64 mx-auto rounded shadow-sm" />
+                        <p className="text-sm text-green-600 font-medium">แนบไฟล์สำเร็จ (คลิกเพื่อเปลี่ยนรูป)</p>
+                      </div>
+                    ) : (
+                      <div className="flex flex-col items-center gap-2">
+                        <UploadCloud className="h-10 w-10 text-muted-foreground" />
+                        <p className="text-sm text-muted-foreground">คลิกเพื่ออัปโหลดสลิป (รองรับรูปภาพ ไม่เกิน 2MB)</p>
+                      </div>
+                    )}
                   </div>
                 </div>
 
                 <div className="flex gap-4">
                   <Link href="/register">
-                    <Button type="button" variant="outline" className="flex-1" disabled={isProcessing}>
+                    <Button type="button" variant="outline" className="flex-1" disabled={createRegistration.isPending}>
                       ยกเลิก
                     </Button>
                   </Link>
                   <Button 
                     type="submit" 
                     className="flex-1 bg-primary hover:bg-primary/90"
-                    disabled={!formData.cardNumber || !formData.cardName || !formData.expiryDate || !formData.cvv || isProcessing}
+                    disabled={!slipImage || createRegistration.isPending}
                   >
-                    {isProcessing ? (
+                    {createRegistration.isPending ? (
                       <>
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        กำลังประมวลผล...
+                        กำลังบันทึก...
                       </>
                     ) : (
-                      "ชำระเงิน"
+                      "ยืนยันการชำระเงิน"
                     )}
                   </Button>
                 </div>
-
-                <p className="text-xs text-muted-foreground text-center">
-                  นี่คือเว็บไซต์สำหรับการทดสอบ ข้อมูลบัตรจะไม่ถูกบันทึก
-                </p>
               </form>
             </CardContent>
           </Card>

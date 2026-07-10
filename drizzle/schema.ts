@@ -38,6 +38,7 @@ export const registrations = mysqlTable("registrations", {
   totalPrice: int("totalPrice").notNull(),
   paymentStatus: mysqlEnum("paymentStatus", ["pending", "completed", "failed"]).default("pending").notNull(),
   paymentMethod: varchar("paymentMethod", { length: 50 }),
+  paymentSlipUrl: text("paymentSlipUrl"),
   notes: text("notes"),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),

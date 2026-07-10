@@ -101,6 +101,7 @@ export async function createRegistration(data: {
   trainingDate: string;
   numberOfParticipants: number;
   totalPrice: number;
+  paymentSlipUrl?: string;
   notes?: string;
 }) {
   const db = await getDb();
@@ -119,6 +120,8 @@ export async function createRegistration(data: {
     numberOfParticipants: data.numberOfParticipants,
     totalPrice: data.totalPrice,
     paymentStatus: "pending",
+    paymentMethod: "bank_transfer",
+    paymentSlipUrl: data.paymentSlipUrl || null,
     notes: data.notes || null,
   });
 }

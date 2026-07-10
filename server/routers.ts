@@ -57,6 +57,7 @@ export const appRouter = router({
         trainingDate: z.string(),
         numberOfParticipants: z.number().min(1),
         totalPrice: z.number().min(0),
+        paymentSlipUrl: z.string().optional(),
         notes: z.string().optional(),
       }))
       .mutation(async ({ input }) => {
@@ -71,6 +72,7 @@ export const appRouter = router({
             trainingDate: input.trainingDate,
             numberOfParticipants: input.numberOfParticipants,
             totalPrice: input.totalPrice,
+            paymentSlipUrl: input.paymentSlipUrl,
             notes: input.notes,
           });
           return { success: true, message: "ลงทะเบียนสำเร็จ" };
