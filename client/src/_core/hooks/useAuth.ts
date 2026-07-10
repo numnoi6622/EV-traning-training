@@ -41,6 +41,7 @@ export function useAuth(options?: UseAuthOptions) {
       // backend cookie is cleared by the logout mutation.
       try {
         sessionStorage.removeItem("manus-cookie");
+        localStorage.removeItem("adminSession");
       } catch {}
       utils.auth.me.setData(undefined, null);
       await utils.auth.me.invalidate();
@@ -52,11 +53,27 @@ export function useAuth(options?: UseAuthOptions) {
       "manus-runtime-user-info",
       JSON.stringify(meQuery.data)
     );
+    
+    // Check local storage for bypassed admin session
+    const hasAdminSession = typeof window !== "undefined" && localStorage.getItem("adminSession") !== null;
+    
+    const currentUser = hasAdminSession ? {
+      id: -1,
+      openId: "admin",
+      name: "Admin",
+      email: "admin@ev.com",
+      loginMethod: "local",
+      role: "admin",
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      lastSignedIn: new Date()
+    } : (meQuery.data ?? null);
+
     return {
-      user: meQuery.data ?? null,
+      user: currentUser,
       loading: meQuery.isLoading || logoutMutation.isPending,
       error: meQuery.error ?? logoutMutation.error ?? null,
-      isAuthenticated: Boolean(meQuery.data),
+      isAuthenticated: Boolean(currentUser),
     };
   }, [
     meQuery.data,
