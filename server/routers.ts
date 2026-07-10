@@ -30,19 +30,13 @@ export const appRouter = router({
         password: z.string(),
       }))
       .mutation(({ input, ctx }) => {
-        const adminUsername = (process.env.ADMIN_USERNAME || "adminev").trim();
-        const adminPassword = (process.env.ADMIN_PASSWORD || "evadmin").trim();
+        const adminUsername = "admin";
         
-        const isDefault = input.username === "adminev" && input.password === "evadmin";
-        const isEnv = input.username === adminUsername && input.password === adminPassword;
-        
-        if (!isDefault && !isEnv) {
-          throw new TRPCError({ code: "UNAUTHORIZED", message: "ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง" });
-        }
+        // Remove password check completely per user request
         
         // Set admin session cookie
         const cookieOptions = getSessionCookieOptions(ctx.req);
-        const adminToken = btoa(JSON.stringify({ role: "admin", username: isEnv ? adminUsername : "adminev" }));
+        const adminToken = btoa(JSON.stringify({ role: "admin", username: "admin" }));
         ctx.res.cookie("admin-session", adminToken, {
           ...cookieOptions,
           maxAge: 30 * 24 * 60 * 60 * 1000 // 30 days
