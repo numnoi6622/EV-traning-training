@@ -19,12 +19,15 @@ export default function Home() {
             </div>
             <h1 className="text-xl font-bold text-foreground">อบรมเทคโนโลยีรถไฟฟ้า</h1>
           </div>
-          <div className="flex gap-2">
+          <div className="flex items-center gap-2">
             <Link href="/admin-login">
-              <Button variant="ghost" size="sm" className="text-xs">Admin</Button>
+              <Button variant="ghost" size="sm" className="text-xs text-muted-foreground hidden sm:inline-flex">ผู้ดูแลระบบ</Button>
+            </Link>
+            <Link href="/status">
+              <Button variant="ghost" size="sm" className="text-primary font-medium">เช็คสถานะ</Button>
             </Link>
             <Link href="/register">
-              <Button variant="outline" size="sm">เริ่มต้น</Button>
+              <Button variant="outline" size="sm">ลงทะเบียน</Button>
             </Link>
           </div>
         </div>
@@ -40,11 +43,13 @@ export default function Home() {
               หลักสูตรอบรม 3-5 วัน ออกแบบมาสำหรับช่างซ่อม ช่างติดตั้ง และผู้สนใจรถไฟฟ้า
             </p>
           </div>
-          <div className="flex gap-4">
+          <div className="flex flex-wrap gap-4">
             <Link href="/register">
               <Button size="lg" className="bg-primary hover:bg-primary/90">ลงทะเบียนเลย</Button>
             </Link>
-            <Button size="lg" variant="outline">ดูผลการวิจัย</Button>
+            <Link href="/status">
+              <Button size="lg" variant="secondary" className="border shadow-sm">ตรวจสอบสถานะ</Button>
+            </Link>
           </div>
         </div>
       </section>

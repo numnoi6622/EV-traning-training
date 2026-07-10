@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -8,42 +8,32 @@ import { ArrowLeft, Loader2, CheckCircle, UploadCloud } from "lucide-react";
 import { toast } from "sonner";
 import { trpc } from "@/lib/trpc";
 
-interface RegistrationData {
-  firstName: string;
-  lastName: string;
-  email: string;
-  phone: string;
-  courseType: string;
-  trainingDate: string;
-  numberOfParticipants: number;
-  totalPrice: number;
-}
-
 export default function Payment() {
   const [, setLocation] = useLocation();
+  const searchParams = new URLSearchParams(window.location.search);
+  const phone = searchParams.get("phone");
+  
   const [isSuccess, setIsSuccess] = useState(false);
-  const [registrationData, setRegistrationData] = useState<RegistrationData | null>(null);
   const [slipImage, setSlipImage] = useState<string | null>(null);
 
-  const createRegistration = trpc.registration.create.useMutation({
+  // Fetch registration by phone
+  const { data: registrationData, isLoading, isError } = trpc.registration.checkStatus.useQuery(
+    { phone: phone || "" },
+    { enabled: !!phone }
+  );
+
+  const uploadSlip = trpc.registration.uploadSlip.useMutation({
     onSuccess: () => {
       setIsSuccess(true);
-      toast.success("ชำระเงินและลงทะเบียนสำเร็จ!");
+      toast.success("อัพโหลดหลักฐานการโอนเงินสำเร็จ!");
       setTimeout(() => {
-        setLocation("/");
+        setLocation(`/status?phone=${phone}`);
       }, 3000);
     },
     onError: (error) => {
-      toast.error(error.message || "เกิดข้อผิดพลาดในการบันทึกข้อมูล");
+      toast.error(error.message || "เกิดข้อผิดพลาดในการอัพโหลดสลิป");
     },
   });
-
-  useEffect(() => {
-    const data = sessionStorage.getItem('registrationData');
-    if (data) {
-      setRegistrationData(JSON.parse(data));
-    }
-  }, []);
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -61,7 +51,7 @@ export default function Payment() {
         const canvas = document.createElement("canvas");
         let width = img.width;
         let height = img.height;
-        const maxDim = 400; // Very small to ensure under 65KB for TEXT column
+        const maxDim = 800; // Can be larger now since we use MEDIUMTEXT
         
         if (width > height && width > maxDim) {
           height *= maxDim / width;
@@ -76,8 +66,7 @@ export default function Payment() {
         const ctx = canvas.getContext("2d");
         if (ctx) {
           ctx.drawImage(img, 0, 0, width, height);
-          // Compress to JPEG with 0.4 quality to ensure it fits in MySQL TEXT column (65KB max)
-          const compressedBase64 = canvas.toDataURL("image/jpeg", 0.4);
+          const compressedBase64 = canvas.toDataURL("image/jpeg", 0.7);
           setSlipImage(compressedBase64);
         } else {
           setSlipImage(event.target?.result as string);
@@ -97,14 +86,13 @@ export default function Payment() {
     }
 
     if (!registrationData) {
-      toast.error("ไม่พบข้อมูลการลงทะเบียน กรุณาทำรายการใหม่");
+      toast.error("ไม่พบข้อมูลการลงทะเบียน");
       return;
     }
 
-    createRegistration.mutate({
-      ...registrationData,
-      courseType: registrationData.courseType as any,
-      paymentSlipUrl: slipImage, // Send base64 image
+    uploadSlip.mutate({
+      id: registrationData.id,
+      paymentSlipUrl: slipImage,
     });
   };
 
@@ -173,7 +161,7 @@ export default function Payment() {
                       accept="image/*"
                       className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                       onChange={handleImageUpload}
-                      disabled={createRegistration.isPending}
+                      disabled={uploadSlip.isPending}
                     />
                     {slipImage ? (
                       <div className="space-y-4">
@@ -190,17 +178,17 @@ export default function Payment() {
                 </div>
 
                 <div className="flex gap-4">
-                  <Link href="/register">
-                    <Button type="button" variant="outline" className="flex-1" disabled={createRegistration.isPending}>
+                  <Link href={`/status?phone=${phone}`}>
+                    <Button type="button" variant="outline" className="flex-1" disabled={uploadSlip.isPending}>
                       ยกเลิก
                     </Button>
                   </Link>
                   <Button 
                     type="submit" 
                     className="flex-1 bg-primary hover:bg-primary/90"
-                    disabled={!slipImage || createRegistration.isPending}
+                    disabled={!slipImage || uploadSlip.isPending}
                   >
-                    {createRegistration.isPending ? (
+                    {uploadSlip.isPending ? (
                       <>
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                         กำลังบันทึก...

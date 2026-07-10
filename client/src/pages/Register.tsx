@@ -21,10 +21,23 @@ export default function Register() {
     trainingDate: "",
     numberOfParticipants: "1",
     notes: "",
+    billingAddress: "",
   });
 
-  // Mutation moved to Payment.tsx
-  const isPending = false;
+  const createRegistration = trpc.registration.create.useMutation({
+    onSuccess: () => {
+      toast.success("ลงทะเบียนสำเร็จ! กรุณาชำระเงินในหน้าถัดไป");
+      sessionStorage.removeItem('registrationData');
+      setTimeout(() => {
+        setLocation(`/status?phone=${formData.phone}`);
+      }, 1500);
+    },
+    onError: (error) => {
+      toast.error(error.message || "เกิดข้อผิดพลาดในการลงทะเบียน");
+    },
+  });
+
+  const isPending = createRegistration.isPending;
 
   const courseTypes = [
     { value: "repair", label: "ช่างซ่อมรถไฟฟ้า (5 วัน)" },
@@ -73,22 +86,18 @@ export default function Register() {
       return;
     }
 
-    sessionStorage.setItem('registrationData', JSON.stringify({
+    createRegistration.mutate({
       firstName: formData.firstName,
       lastName: formData.lastName,
       email: formData.email,
       phone: formData.phone,
-      courseType: formData.courseType,
+      courseType: formData.courseType as any,
       trainingDate: formData.trainingDate,
       numberOfParticipants: parseInt(formData.numberOfParticipants),
       totalPrice: totalPrice,
       notes: formData.notes || undefined,
-    }));
-    
-    toast.success("กำลังไปยังหน้าชำระเงิน...");
-    setTimeout(() => {
-      setLocation("/payment");
-    }, 1000);
+      billingAddress: formData.billingAddress || undefined,
+    });
   };
 
   return (
@@ -217,6 +226,19 @@ export default function Register() {
                 </div>
 
                 <div className="space-y-2">
+                  <Label htmlFor="billingAddress">ที่อยู่ออกใบเสร็จรับเงิน</Label>
+                  <Textarea
+                    id="billingAddress"
+                    name="billingAddress"
+                    placeholder="ชื่อบริษัท/ชื่อบุคคล และที่อยู่สำหรับการออกใบเสร็จ (เว้นว่างได้หากไม่ต้องการ)"
+                    value={formData.billingAddress}
+                    onChange={handleChange}
+                    rows={2}
+                    disabled={isPending}
+                  />
+                </div>
+
+                <div className="space-y-2">
                   <Label htmlFor="notes">หมายเหตุเพิ่มเติม</Label>
                   <Textarea
                     id="notes"
@@ -224,7 +246,7 @@ export default function Register() {
                     placeholder="หมายเหตุเพิ่มเติม (ไม่บังคับ)"
                     value={formData.notes}
                     onChange={handleChange}
-                    rows={4}
+                    rows={2}
                     disabled={isPending}
                   />
                 </div>

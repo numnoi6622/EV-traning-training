@@ -45,8 +45,8 @@ export const appRouter = router({
         trainingDate: z.string(),
         numberOfParticipants: z.number().min(1),
         totalPrice: z.number().min(0),
-        paymentSlipUrl: z.string().optional(),
         notes: z.string().optional(),
+        billingAddress: z.string().optional(),
       }))
       .mutation(async ({ input }) => {
         const { createRegistration } = await import("./db");
@@ -60,14 +60,40 @@ export const appRouter = router({
             trainingDate: input.trainingDate,
             numberOfParticipants: input.numberOfParticipants,
             totalPrice: input.totalPrice,
-            paymentSlipUrl: input.paymentSlipUrl,
             notes: input.notes,
+            billingAddress: input.billingAddress,
           });
           return { success: true, message: "ลงทะเบียนสำเร็จ" };
         } catch (error) {
           console.error("Registration error:", error);
           throw new Error("ไม่สามารถลงทะเบียนได้");
         }
+      }),
+
+    uploadSlip: publicProcedure
+      .input(z.object({
+        id: z.number(),
+        paymentSlipUrl: z.string(),
+      }))
+      .mutation(async ({ input }) => {
+        const { uploadRegistrationSlip } = await import("./db");
+        try {
+          await uploadRegistrationSlip(input.id, input.paymentSlipUrl);
+          return { success: true };
+        } catch (error) {
+          throw new Error("อัพโหลดสลิปไม่สำเร็จ");
+        }
+      }),
+
+    checkStatus: publicProcedure
+      .input(z.object({ phone: z.string() }))
+      .query(async ({ input }) => {
+        const { getRegistrationByPhone } = await import("./db");
+        const registration = await getRegistrationByPhone(input.phone);
+        if (!registration) {
+          throw new TRPCError({ code: "NOT_FOUND", message: "ไม่พบข้อมูลการลงทะเบียนสำหรับเบอร์โทรนี้" });
+        }
+        return registration;
       }),
     list: adminProcedure.query(async () => {
       const { getRegistrations } = await import("./db");

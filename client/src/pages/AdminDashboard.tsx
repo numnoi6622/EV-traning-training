@@ -47,15 +47,17 @@ export default function AdminDashboard() {
   };
 
   const paymentStatusLabels: Record<string, string> = {
-    pending: "รอชำระเงิน",
+    unpaid: "ยังไม่ชำระเงิน",
+    pending: "รอยืนยันสลิป",
     completed: "ชำระเงินแล้ว",
     failed: "ชำระเงินล้มเหลว",
   };
 
   const paymentStatusColors: Record<string, string> = {
+    unpaid: "bg-red-100 text-red-800",
     pending: "bg-yellow-100 text-yellow-800",
     completed: "bg-green-100 text-green-800",
-    failed: "bg-red-100 text-red-800",
+    failed: "bg-gray-100 text-gray-800",
   };
 
   const filteredRegistrations = registrations?.filter((reg: any) => {
@@ -66,6 +68,7 @@ export default function AdminDashboard() {
 
   const stats = {
     total: registrations?.length || 0,
+    unpaid: registrations?.filter((r: any) => r.paymentStatus === "unpaid").length || 0,
     pending: registrations?.filter((r: any) => r.paymentStatus === "pending").length || 0,
     completed: registrations?.filter((r: any) => r.paymentStatus === "completed").length || 0,
   };
@@ -76,7 +79,7 @@ export default function AdminDashboard() {
       return;
     }
 
-    const headers = ["ชื่อ", "นามสกุล", "อีเมล", "เบอร์โทร", "หลักสูตร", "วันที่อบรม", "จำนวนคน", "ราคารวม", "สถานะชำระเงิน"];
+    const headers = ["ชื่อ", "นามสกุล", "อีเมล", "เบอร์โทร", "หลักสูตร", "วันที่อบรม", "จำนวนคน", "ราคารวม", "สถานะชำระเงิน", "ที่อยู่ออกใบเสร็จ", "หมายเหตุ"];
     const rows = registrations.map((reg: any) => [
       reg.firstName,
       reg.lastName,
@@ -87,9 +90,11 @@ export default function AdminDashboard() {
       reg.numberOfParticipants,
       reg.totalPrice,
       paymentStatusLabels[reg.paymentStatus],
+      reg.billingAddress || "-",
+      reg.notes || "-",
     ]);
 
-    const csv = [headers, ...rows].map(row => row.map(cell => `"${cell}"`).join(",")).join("\n");
+    const csv = [headers, ...rows].map(row => row.map((cell: any) => `"${cell}"`).join(",")).join("\n");
     const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
     const link = document.createElement("a");
     link.href = URL.createObjectURL(blob);
@@ -107,7 +112,7 @@ export default function AdminDashboard() {
         </div>
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <Card className="border-border bg-card">
             <CardHeader className="pb-3">
               <CardTitle className="text-sm font-medium text-muted-foreground">ทั้งหมด</CardTitle>
@@ -120,11 +125,21 @@ export default function AdminDashboard() {
 
           <Card className="border-border bg-card">
             <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium text-muted-foreground">รอชำระเงิน</CardTitle>
+              <CardTitle className="text-sm font-medium text-muted-foreground">ยังไม่ชำระเงิน</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold text-red-600">{stats.unpaid}</div>
+              <p className="text-xs text-muted-foreground mt-1">รออัพโหลดสลิป</p>
+            </CardContent>
+          </Card>
+
+          <Card className="border-border bg-card">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-sm font-medium text-muted-foreground">รอยืนยัน</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-yellow-600">{stats.pending}</div>
-              <p className="text-xs text-muted-foreground mt-1">ยังไม่ชำระเงิน</p>
+              <p className="text-xs text-muted-foreground mt-1">รอตรวจสอบสลิป</p>
             </CardContent>
           </Card>
 

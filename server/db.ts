@@ -106,8 +106,8 @@ export async function createRegistration(data: {
   trainingDate: string;
   numberOfParticipants: number;
   totalPrice: number;
-  paymentSlipUrl?: string;
   notes?: string;
+  billingAddress?: string;
 }) {
   const db = await getDb();
   if (!db) {
@@ -124,10 +124,10 @@ export async function createRegistration(data: {
     trainingDate: data.trainingDate,
     numberOfParticipants: data.numberOfParticipants,
     totalPrice: data.totalPrice,
-    paymentStatus: "pending",
+    paymentStatus: "unpaid",
     paymentMethod: "bank_transfer",
-    paymentSlipUrl: data.paymentSlipUrl || null,
     notes: data.notes || null,
+    billingAddress: data.billingAddress || null,
   });
 }
 
@@ -152,7 +152,31 @@ export async function getRegistrationById(id: number) {
   return result.length > 0 ? result[0] : undefined;
 }
 
-export async function updateRegistrationPaymentStatus(id: number, status: "pending" | "completed" | "failed") {
+export async function getRegistrationByPhone(phone: string) {
+  const db = await getDb();
+  if (!db) {
+    return undefined;
+  }
+
+  const { registrations } = await import("../drizzle/schema");
+  const result = await db.select().from(registrations).where(eq(registrations.phone, phone)).orderBy(registrations.createdAt).limit(1);
+  return result.length > 0 ? result[0] : undefined;
+}
+
+export async function uploadRegistrationSlip(id: number, slipUrl: string) {
+  const db = await getDb();
+  if (!db) {
+    throw new Error("Database not available");
+  }
+
+  const { registrations } = await import("../drizzle/schema");
+  return await db.update(registrations).set({ 
+    paymentSlipUrl: slipUrl,
+    paymentStatus: "pending" 
+  }).where(eq(registrations.id, id));
+}
+
+export async function updateRegistrationPaymentStatus(id: number, status: "unpaid" | "pending" | "completed" | "failed") {
   const db = await getDb();
   if (!db) {
     throw new Error("Database not available");

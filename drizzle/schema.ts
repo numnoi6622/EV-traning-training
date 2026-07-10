@@ -1,4 +1,4 @@
-import { int, mysqlEnum, mysqlTable, text, timestamp, varchar } from "drizzle-orm/mysql-core";
+import { int, mysqlEnum, mysqlTable, text, mediumtext, timestamp, varchar } from "drizzle-orm/mysql-core";
 
 /**
  * Core user table backing auth flow.
@@ -36,10 +36,11 @@ export const registrations = mysqlTable("registrations", {
   trainingDate: varchar("trainingDate", { length: 50 }).notNull(),
   numberOfParticipants: int("numberOfParticipants").default(1).notNull(),
   totalPrice: int("totalPrice").notNull(),
-  paymentStatus: mysqlEnum("paymentStatus", ["pending", "completed", "failed"]).default("pending").notNull(),
+  paymentStatus: mysqlEnum("paymentStatus", ["unpaid", "pending", "completed", "failed"]).default("unpaid").notNull(),
   paymentMethod: varchar("paymentMethod", { length: 50 }),
-  paymentSlipUrl: text("paymentSlipUrl"),
+  paymentSlipUrl: mediumtext("paymentSlipUrl"),
   notes: text("notes"),
+  billingAddress: text("billingAddress"),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
 });
