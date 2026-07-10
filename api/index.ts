@@ -21,4 +21,36 @@ app.use(
   })
 );
 
+app.get("/api/migrate-db", async (req, res) => {
+  try {
+    const { getDb } = await import("../server/db");
+    const { sql } = await import("drizzle-orm");
+    const db = await getDb();
+    if (!db) {
+      return res.status(500).json({ error: "No DB connection" });
+    }
+    
+    // Execute migrations directly
+    const queries = [
+      "ALTER TABLE `registrations` MODIFY COLUMN `paymentStatus` enum('unpaid','pending','completed','failed') NOT NULL DEFAULT 'unpaid'",
+      "ALTER TABLE `registrations` ADD COLUMN `paymentSlipUrl` mediumtext",
+      "ALTER TABLE `registrations` ADD COLUMN `billingAddress` text"
+    ];
+    
+    let results = [];
+    for (const q of queries) {
+      try {
+        await db.execute(sql.raw(q));
+        results.push({ query: q, status: "success" });
+      } catch (e: any) {
+        results.push({ query: q, status: "error", message: e.message });
+      }
+    }
+    
+    res.json({ success: true, results });
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 export default app;
