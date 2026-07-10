@@ -52,16 +52,17 @@ export default function Register() {
     { value: "users", label: "ผู้สนใจรถไฟฟ้า (1 วัน)" },
   ];
 
-  const trainingDates = [
-    "2026-07-15",
-    "2026-08-01",
-    "2026-08-15",
-    "2026-09-01",
-  ];
+  const courseDates: Record<string, {value: string, label: string}[]> = {
+    repair: [{ value: "3-10 สิงหาคม 2569", label: "3-10 สิงหาคม 2569" }],
+    charging: [{ value: "23-31 สิงหาคม 2569", label: "23-31 สิงหาคม 2569" }],
+    users: [{ value: "5 กันยายน 2569", label: "5 กันยายน 2569" }],
+  };
+
+  const availableDates = formData.courseType ? (courseDates[formData.courseType] || []) : [];
 
   const coursePrices: Record<string, number> = {
-    repair: 15000,
-    charging: 15000,
+    repair: 5000,
+    charging: 5000,
     users: 3000,
   };
 
@@ -71,7 +72,13 @@ export default function Register() {
   };
 
   const handleSelectChange = (name: string, value: string) => {
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData(prev => {
+      const newData = { ...prev, [name]: value };
+      if (name === "courseType") {
+        newData.trainingDate = "";
+      }
+      return newData;
+    });
   };
 
   const totalPrice = formData.courseType 
@@ -200,13 +207,9 @@ export default function Register() {
                       <SelectValue placeholder="เลือกวันที่อบรม" />
                     </SelectTrigger>
                     <SelectContent>
-                      {trainingDates.map(date => (
-                        <SelectItem key={date} value={date}>
-                          {new Date(date).toLocaleDateString("th-TH", { 
-                            year: "numeric", 
-                            month: "long", 
-                            day: "numeric" 
-                          })}
+                      {availableDates.map(date => (
+                        <SelectItem key={date.value} value={date.value}>
+                          {date.label}
                         </SelectItem>
                       ))}
                     </SelectContent>
