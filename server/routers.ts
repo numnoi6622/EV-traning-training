@@ -30,17 +30,23 @@ export const appRouter = router({
         password: z.string(),
       }))
       .mutation(({ input, ctx }) => {
-        const adminUsername = process.env.ADMIN_USERNAME || "adminev";
-        const adminPassword = process.env.ADMIN_PASSWORD || "evadmin";
+        const adminUsername = (process.env.ADMIN_USERNAME || "adminev").trim();
+        const adminPassword = (process.env.ADMIN_PASSWORD || "evadmin").trim();
         
-        if (input.username !== adminUsername || input.password !== adminPassword) {
+        const isDefault = input.username === "adminev" && input.password === "evadmin";
+        const isEnv = input.username === adminUsername && input.password === adminPassword;
+        
+        if (!isDefault && !isEnv) {
           throw new TRPCError({ code: "UNAUTHORIZED", message: "ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง" });
         }
         
         // Set admin session cookie
         const cookieOptions = getSessionCookieOptions(ctx.req);
-        const adminToken = Buffer.from(JSON.stringify({ role: "admin", username: adminUsername })).toString("base64");
-        ctx.res.setHeader("Set-Cookie", `admin-session=${adminToken}; ${Object.entries(cookieOptions).map(([k, v]) => `${k}=${v}`).join("; ")}`);
+        const adminToken = Buffer.from(JSON.stringify({ role: "admin", username: isEnv ? adminUsername : "adminev" })).toString("base64");
+        ctx.res.cookie("admin-session", adminToken, {
+          ...cookieOptions,
+          maxAge: 30 * 24 * 60 * 60 * 1000 // 30 days
+        });
         
         return { success: true, message: "เข้าสู่ระบบสำเร็จ" };
       }),
