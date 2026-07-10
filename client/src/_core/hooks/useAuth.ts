@@ -71,7 +71,7 @@ export function useAuth(options?: UseAuthOptions) {
 
     return {
       user: currentUser,
-      loading: meQuery.isLoading || logoutMutation.isPending,
+      loading: hasAdminSession ? false : (meQuery.isLoading || logoutMutation.isPending),
       error: meQuery.error ?? logoutMutation.error ?? null,
       isAuthenticated: Boolean(currentUser),
     };
