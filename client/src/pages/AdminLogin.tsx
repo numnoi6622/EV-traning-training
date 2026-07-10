@@ -90,8 +90,8 @@ export default function AdminLogin() {
           <div className="mt-6 p-4 bg-secondary/50 rounded-lg border border-border">
             <p className="text-sm text-muted-foreground text-center">
               <strong>Demo Credentials:</strong><br />
-              Username: <code className="bg-background px-2 py-1 rounded">admin</code><br />
-              Password: <code className="bg-background px-2 py-1 rounded">admin</code>
+              Username: <code className="bg-background px-2 py-1 rounded">adminev</code><br />
+              Password: <code className="bg-background px-2 py-1 rounded">evadmin</code>
             </p>
           </div>
         </CardContent>

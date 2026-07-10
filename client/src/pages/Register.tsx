@@ -63,7 +63,7 @@ export default function Register() {
   const coursePrices: Record<string, number> = {
     repair: 5000,
     charging: 5000,
-    users: 3000,
+    users: 500,
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {

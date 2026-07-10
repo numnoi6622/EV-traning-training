@@ -30,8 +30,8 @@ export const appRouter = router({
         password: z.string(),
       }))
       .mutation(({ input, ctx }) => {
-        const adminUsername = process.env.ADMIN_USERNAME || "admin";
-        const adminPassword = process.env.ADMIN_PASSWORD || "admin";
+        const adminUsername = process.env.ADMIN_USERNAME || "adminev";
+        const adminPassword = process.env.ADMIN_PASSWORD || "evadmin";
         
         if (input.username !== adminUsername || input.password !== adminPassword) {
           throw new TRPCError({ code: "UNAUTHORIZED", message: "ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง" });
