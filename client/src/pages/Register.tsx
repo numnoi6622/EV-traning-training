@@ -124,7 +124,7 @@ export default function Register() {
                       value={formData.firstName}
                       onChange={handleChange}
                       required
-                      disabled={createRegistration.isPending}
+                      disabled={isPending}
                     />
                   </div>
                   <div className="space-y-2">
@@ -136,7 +136,7 @@ export default function Register() {
                       value={formData.lastName}
                       onChange={handleChange}
                       required
-                      disabled={createRegistration.isPending}
+                      disabled={isPending}
                     />
                   </div>
                 </div>
@@ -152,7 +152,7 @@ export default function Register() {
                       value={formData.email}
                       onChange={handleChange}
                       required
-                      disabled={createRegistration.isPending}
+                      disabled={isPending}
                     />
                   </div>
                   <div className="space-y-2">
@@ -164,14 +164,14 @@ export default function Register() {
                       value={formData.phone}
                       onChange={handleChange}
                       required
-                      disabled={createRegistration.isPending}
+                      disabled={isPending}
                     />
                   </div>
                 </div>
 
                 <div className="space-y-2">
                   <Label htmlFor="courseType">เลือกหลักสูตร *</Label>
-                  <Select value={formData.courseType} onValueChange={(value) => handleSelectChange("courseType", value)} disabled={createRegistration.isPending}>
+                  <Select value={formData.courseType} onValueChange={(value) => handleSelectChange("courseType", value)} disabled={isPending}>
                     <SelectTrigger id="courseType">
                       <SelectValue placeholder="เลือกหลักสูตร" />
                     </SelectTrigger>
@@ -187,7 +187,7 @@ export default function Register() {
 
                 <div className="space-y-2">
                   <Label htmlFor="trainingDate">วันที่อบรม *</Label>
-                  <Select value={formData.trainingDate} onValueChange={(value) => handleSelectChange("trainingDate", value)} disabled={createRegistration.isPending}>
+                  <Select value={formData.trainingDate} onValueChange={(value) => handleSelectChange("trainingDate", value)} disabled={isPending}>
                     <SelectTrigger id="trainingDate">
                       <SelectValue placeholder="เลือกวันที่อบรม" />
                     </SelectTrigger>
@@ -212,7 +212,7 @@ export default function Register() {
                     value={formData.numberOfParticipants}
                     onChange={handleChange}
                     required
-                    disabled={createRegistration.isPending}
+                    disabled={isPending}
                   />
                 </div>
 
@@ -225,7 +225,7 @@ export default function Register() {
                     value={formData.notes}
                     onChange={handleChange}
                     rows={4}
-                    disabled={createRegistration.isPending}
+                    disabled={isPending}
                   />
                 </div>
 
@@ -250,16 +250,16 @@ export default function Register() {
 
                 <div className="flex gap-4">
                   <Link href="/">
-                    <Button type="button" variant="outline" className="flex-1" disabled={createRegistration.isPending}>
+                    <Button type="button" variant="outline" className="flex-1" disabled={isPending}>
                       ยกเลิก
                     </Button>
                   </Link>
                   <Button 
                     type="submit" 
                     className="flex-1 bg-primary hover:bg-primary/90"
-                    disabled={!formData.firstName || !formData.lastName || !formData.email || !formData.phone || !formData.courseType || !formData.trainingDate || createRegistration.isPending}
+                    disabled={!formData.firstName || !formData.lastName || !formData.email || !formData.phone || !formData.courseType || !formData.trainingDate || isPending}
                   >
-                    {createRegistration.isPending ? (
+                    {isPending ? (
                       <>
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                         กำลังประมวลผล...

@@ -124,11 +124,10 @@ export default function Payment() {
             <CardContent>
               <form onSubmit={handleSubmit} className="space-y-6">
                 
-                {/* Bank Account Info Mock */}
+                {/* Bank Account Info */}
                 <div className="p-6 bg-secondary/50 rounded-lg text-center space-y-4 border border-border">
-                  <h3 className="font-semibold text-lg">ธนาคารกสิกรไทย</h3>
-                  <p className="text-2xl font-mono tracking-widest font-bold">123-4-56789-0</p>
-                  <p className="text-muted-foreground">ชื่อบัญชี: บจก. EV Training</p>
+                  <h3 className="font-semibold text-lg">ข้อมูลบัญชีสำหรับโอนเงิน</h3>
+                  <img src="/payment.jpg" alt="ข้อมูลบัญชี" className="mx-auto rounded-lg shadow-sm max-h-64 object-contain" />
                 </div>
 
                 <div className="space-y-4 rounded-lg bg-secondary p-4">
