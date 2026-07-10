@@ -29,7 +29,7 @@ export default function Register() {
       toast.success("ลงทะเบียนสำเร็จ! กรุณาชำระเงินในหน้าถัดไป");
       sessionStorage.removeItem('registrationData');
       setTimeout(() => {
-        setLocation(`/status?phone=${formData.phone}`);
+        setLocation(`/payment?phone=${formData.phone}`);
       }, 1500);
     },
     onError: (error) => {
