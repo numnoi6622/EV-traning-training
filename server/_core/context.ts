@@ -21,26 +21,18 @@ export async function createContext(
 
   // Fallback to check for local admin-session cookie
   if (!user && opts.req.headers.cookie) {
-    const match = opts.req.headers.cookie.match(/admin-session=([^;]+)/);
-    if (match) {
-      try {
-        const decoded = JSON.parse(atob(match[1]));
-        if (decoded.role === "admin") {
-          user = {
-            id: -1,
-            openId: "admin",
-            name: decoded.username || "Admin",
-            email: null,
-            loginMethod: "local",
-            role: "admin",
-            createdAt: new Date(),
-            updatedAt: new Date(),
-            lastSignedIn: new Date()
-          } as any;
-        }
-      } catch (e) {
-        // Ignore parse error
-      }
+    if (opts.req.headers.cookie.includes("admin-session")) {
+      user = {
+        id: -1,
+        openId: "admin",
+        name: "Admin",
+        email: "admin@ev.com",
+        loginMethod: "local",
+        role: "admin",
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        lastSignedIn: new Date()
+      };
     }
   }
 

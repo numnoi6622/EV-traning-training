@@ -29,20 +29,8 @@ export const appRouter = router({
         username: z.string(),
         password: z.string(),
       }))
-      .mutation(({ input, ctx }) => {
-        const adminUsername = "admin";
-        
-        // Remove password check completely per user request
-        
-        // Set admin session cookie
-        const cookieOptions = getSessionCookieOptions(ctx.req);
-        const adminToken = btoa(JSON.stringify({ role: "admin", username: "admin" }));
-        ctx.res.cookie("admin-session", adminToken, {
-          ...cookieOptions,
-          maxAge: 30 * 24 * 60 * 60 * 1000 // 30 days
-        });
-        
-        return { success: true, message: "เข้าสู่ระบบสำเร็จ" };
+      .mutation(async ({ ctx }) => {
+        return { success: true };
       }),
   }),
 
