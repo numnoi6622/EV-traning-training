@@ -24,7 +24,7 @@ export async function createContext(
     const match = opts.req.headers.cookie.match(/admin-session=([^;]+)/);
     if (match) {
       try {
-        const decoded = JSON.parse(Buffer.from(match[1], "base64").toString());
+        const decoded = JSON.parse(atob(match[1]));
         if (decoded.role === "admin") {
           user = {
             id: -1,

@@ -42,7 +42,7 @@ export const appRouter = router({
         
         // Set admin session cookie
         const cookieOptions = getSessionCookieOptions(ctx.req);
-        const adminToken = Buffer.from(JSON.stringify({ role: "admin", username: isEnv ? adminUsername : "adminev" })).toString("base64");
+        const adminToken = btoa(JSON.stringify({ role: "admin", username: isEnv ? adminUsername : "adminev" }));
         ctx.res.cookie("admin-session", adminToken, {
           ...cookieOptions,
           maxAge: 30 * 24 * 60 * 60 * 1000 // 30 days
