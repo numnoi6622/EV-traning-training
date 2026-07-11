@@ -72,9 +72,9 @@ export const appRouter = router({
             billingAddress: input.billingAddress,
           });
           return { success: true, message: "ลงทะเบียนสำเร็จ" };
-        } catch (error) {
+        } catch (error: any) {
           console.error("Registration error:", error);
-          throw new Error("ไม่สามารถลงทะเบียนได้");
+          throw new Error("ไม่สามารถลงทะเบียนได้: " + error.message);
         }
       }),
 
