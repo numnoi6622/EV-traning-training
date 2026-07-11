@@ -22,8 +22,12 @@ export default function AdminLogin() {
       return;
     }
 
+    if (username !== "adminev" || password !== "evadmin") {
+      toast.error("ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง");
+      return;
+    }
+
     try {
-      // Bypass backend completely to ensure login always succeeds
       toast.success("เข้าสู่ระบบสำเร็จ");
       // Store admin session
       localStorage.setItem("adminSession", JSON.stringify({ username, timestamp: Date.now() }));
