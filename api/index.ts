@@ -34,20 +34,56 @@ app.get("/api/migrate-db", async (req, res) => {
       return res.status(500).json({ error: "No DB connection", details: String(_lastDbError?.stack || _lastDbError) });
     }
     
-    // Execute migrations directly
     const queries = [
-      "ALTER TABLE `registrations` MODIFY COLUMN `paymentStatus` enum('unpaid','pending','completed','failed') NOT NULL DEFAULT 'unpaid'",
-      "ALTER TABLE `registrations` ADD COLUMN `paymentSlipUrl` mediumtext",
-      "ALTER TABLE `registrations` ADD COLUMN `billingAddress` text"
+      `CREATE TABLE IF NOT EXISTS users (
+        id SERIAL PRIMARY KEY,
+        "openId" VARCHAR(64) UNIQUE NOT NULL,
+        name TEXT,
+        email VARCHAR(320),
+        "loginMethod" VARCHAR(64),
+        role VARCHAR(20) DEFAULT 'user' NOT NULL,
+        "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+        "updatedAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+        "lastSignedIn" TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
+      )`,
+      `CREATE TABLE IF NOT EXISTS registrations (
+        id SERIAL PRIMARY KEY,
+        "firstName" VARCHAR(100) NOT NULL,
+        "lastName" VARCHAR(100) NOT NULL,
+        email VARCHAR(320) NOT NULL,
+        phone VARCHAR(20) NOT NULL,
+        "courseType" VARCHAR(50) NOT NULL,
+        "trainingDate" VARCHAR(50) NOT NULL,
+        "numberOfParticipants" INTEGER DEFAULT 1 NOT NULL,
+        "totalPrice" INTEGER NOT NULL,
+        "paymentStatus" VARCHAR(50) DEFAULT 'unpaid' NOT NULL,
+        "paymentMethod" VARCHAR(50),
+        "paymentSlipUrl" TEXT,
+        notes TEXT,
+        "billingAddress" TEXT,
+        "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+        "updatedAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
+      )`,
+      `CREATE TABLE IF NOT EXISTS payments (
+        id SERIAL PRIMARY KEY,
+        "registrationId" INTEGER NOT NULL,
+        amount INTEGER NOT NULL,
+        currency VARCHAR(3) DEFAULT 'THB' NOT NULL,
+        "paymentMethod" VARCHAR(50) NOT NULL,
+        "transactionId" VARCHAR(100) UNIQUE,
+        status VARCHAR(50) DEFAULT 'pending' NOT NULL,
+        "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+        "updatedAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
+      )`
     ];
     
     let results = [];
     for (const q of queries) {
       try {
         await db.execute(sql.raw(q));
-        results.push({ query: q, status: "success" });
+        results.push({ status: "success" });
       } catch (e: any) {
-        results.push({ query: q, status: "error", message: e.message });
+        results.push({ status: "error", message: e.message });
       }
     }
     

@@ -2,23 +2,27 @@ import { eq } from "drizzle-orm";
 import { InsertUser, users, registrations } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
-import { sql } from "@vercel/postgres";
-import { drizzle } from "drizzle-orm/vercel-postgres";
-
 let _db: any = null;
+let _pool: any = null;
+
 export let _lastDbError: any = null;
 
 export async function getDb() {
-  if (!_db && process.env.POSTGRES_URL) {
+  if (!_db && process.env.DATABASE_URL) {
     try {
-      _db = drizzle(sql);
+      const { drizzle } = await import("drizzle-orm/mysql2");
+      const mysql = await import("mysql2/promise");
+      if (!_pool) {
+        _pool = mysql.createPool(process.env.DATABASE_URL);
+      }
+      _db = drizzle(_pool);
     } catch (error) {
       console.warn("[Database] Failed to connect:", error);
       _lastDbError = error;
       _db = null;
     }
   } else if (!_db) {
-    _lastDbError = "POSTGRES_URL is " + (process.env.POSTGRES_URL ? "set" : "empty");
+    _lastDbError = "DATABASE_URL is " + (process.env.DATABASE_URL ? "set" : "empty");
   }
   return _db;
 }
