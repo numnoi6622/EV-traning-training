@@ -9,8 +9,9 @@ import DashboardLayout from "@/components/DashboardLayout";
 import { trpc } from "@/lib/trpc";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { useLocation } from "wouter";
-import { Loader2, Download } from "lucide-react";
+import { Loader2, Download, Trash2 } from "lucide-react";
 import { toast } from "sonner";
+import * as XLSX from "xlsx";
 
 export default function AdminDashboard() {
   const { user } = useAuth();
@@ -39,6 +40,22 @@ export default function AdminDashboard() {
 
   const handleApprove = (id: number) => {
     updateStatus.mutate({ id, status: "completed" });
+  };
+
+  const deleteRegistration = trpc.registration.delete.useMutation({
+    onSuccess: () => {
+      toast.success("ลบข้อมูลสำเร็จ");
+      refetch();
+    },
+    onError: (error) => {
+      toast.error(error.message || "เกิดข้อผิดพลาดในการลบข้อมูล");
+    }
+  });
+
+  const handleDelete = (id: number, name: string) => {
+    if (window.confirm(`คุณแน่ใจหรือไม่ว่าต้องการลบข้อมูลของ ${name}?`)) {
+      deleteRegistration.mutate(id);
+    }
   };
 
   const courseTypeLabels: Record<string, string> = {
@@ -74,34 +91,32 @@ export default function AdminDashboard() {
     completed: registrations?.filter((r: any) => r.paymentStatus === "completed").length || 0,
   };
 
-  const handleExportCSV = () => {
+  const handleExportExcel = () => {
     if (!registrations || registrations.length === 0) {
       toast.error("ไม่มีข้อมูลให้ส่งออก");
       return;
     }
 
-    const headers = ["ชื่อ", "นามสกุล", "อีเมล", "เบอร์โทร", "หลักสูตร", "วันที่อบรม", "จำนวนคน", "ราคารวม", "สถานะชำระเงิน", "ที่อยู่ออกใบเสร็จ", "หมายเหตุ"];
-    const rows = registrations.map((reg: any) => [
-      reg.firstName,
-      reg.lastName,
-      reg.email,
-      reg.phone,
-      courseTypeLabels[reg.courseType],
-      new Date(reg.trainingDate).toLocaleDateString("th-TH"),
-      reg.numberOfParticipants,
-      reg.totalPrice,
-      paymentStatusLabels[reg.paymentStatus],
-      reg.billingAddress || "-",
-      reg.notes || "-",
-    ]);
+    const rows = registrations.map((reg: any) => ({
+      "ชื่อ": reg.firstName,
+      "นามสกุล": reg.lastName,
+      "อีเมล": reg.email,
+      "เบอร์โทร": reg.phone,
+      "หลักสูตร": courseTypeLabels[reg.courseType],
+      "วันที่อบรม": new Date(reg.trainingDate).toLocaleDateString("th-TH"),
+      "จำนวนคน": reg.numberOfParticipants,
+      "ราคารวม": reg.totalPrice,
+      "สถานะชำระเงิน": paymentStatusLabels[reg.paymentStatus],
+      "ที่อยู่ออกใบเสร็จ": reg.billingAddress || "-",
+      "หมายเหตุ": reg.notes || "-",
+    }));
 
-    const csv = [headers, ...rows].map(row => row.map((cell: any) => `"${cell}"`).join(",")).join("\n");
-    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
-    const link = document.createElement("a");
-    link.href = URL.createObjectURL(blob);
-    link.download = `registrations-${new Date().toISOString().split("T")[0]}.csv`;
-    link.click();
-    toast.success("ส่งออกข้อมูลสำเร็จ");
+    const worksheet = XLSX.utils.json_to_sheet(rows);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Registrations");
+    XLSX.writeFile(workbook, `registrations-${new Date().toISOString().split("T")[0]}.xlsx`);
+    
+    toast.success("ส่งออกข้อมูล Excel สำเร็จ");
   };
 
   return (
@@ -187,12 +202,12 @@ export default function AdminDashboard() {
               </div>
               <div className="flex items-end">
                 <Button 
-                  onClick={handleExportCSV}
-                  className="w-full bg-primary hover:bg-primary/90 gap-2"
+                  onClick={handleExportExcel}
+                  className="w-full bg-[#107c41] hover:bg-[#107c41]/90 gap-2 text-white"
                   disabled={isLoading}
                 >
                   <Download className="h-4 w-4" />
-                  ส่งออก CSV
+                  ส่งออก Excel
                 </Button>
               </div>
             </div>
@@ -285,6 +300,16 @@ export default function AdminDashboard() {
                                 ยืนยันชำระเงิน
                               </Button>
                             )}
+                            <Button 
+                              variant="destructive" 
+                              size="sm" 
+                              className="w-full text-xs gap-1" 
+                              onClick={() => handleDelete(reg.id, `${reg.firstName} ${reg.lastName}`)}
+                              disabled={deleteRegistration.isPending}
+                            >
+                              <Trash2 className="w-3 h-3" />
+                              ลบ
+                            </Button>
                           </div>
                         </TableCell>
                       </TableRow>

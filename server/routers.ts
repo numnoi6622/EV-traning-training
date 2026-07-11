@@ -10,7 +10,8 @@ import {
   getRegistrationByPhone, 
   getRegistrations, 
   getRegistrationById, 
-  updateRegistrationPaymentStatus 
+  updateRegistrationPaymentStatus,
+  deleteRegistration 
 } from "./db";
 
 // Admin-only procedure
@@ -126,6 +127,17 @@ export const appRouter = router({
         } catch (error) {
           console.error("Update payment status error:", error);
           throw new Error("ไม่สามารถอัปเดตสถานะได้");
+        }
+      }),
+    delete: adminProcedure
+      .input(z.number())
+      .mutation(async ({ input }) => {
+        try {
+          await deleteRegistration(input);
+          return { success: true, message: "ลบข้อมูลสำเร็จ" };
+        } catch (error) {
+          console.error("Delete registration error:", error);
+          throw new Error("ไม่สามารถลบข้อมูลได้");
         }
       }),
   }),

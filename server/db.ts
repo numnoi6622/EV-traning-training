@@ -188,3 +188,12 @@ export async function updateRegistrationPaymentStatus(id: number, status: "unpai
 
   return await db.update(registrations).set({ paymentStatus: status }).where(eq(registrations.id, id));
 }
+
+export async function deleteRegistration(id: number) {
+  const db = await getDb();
+  if (!db) {
+    throw new Error("Database not available");
+  }
+
+  return await db.delete(registrations).where(eq(registrations.id, id));
+}
