@@ -33,8 +33,20 @@ export default function Home() {
         </div>
       </header>
 
-      <section className="relative overflow-hidden bg-gradient-to-b from-primary/10 to-background py-20">
-        <div className="container relative z-10 space-y-6">
+      <section className="relative overflow-hidden bg-gradient-to-b from-primary/10 to-background pb-20">
+        {/* Banner Image */}
+        <div className="w-full">
+          <img 
+            src="/banner.jpg" 
+            alt="EV Training Program Banner" 
+            className="w-full h-auto object-cover"
+            onError={(e) => {
+              (e.target as HTMLImageElement).style.display = 'none';
+            }}
+          />
+        </div>
+
+        <div className="container relative z-10 space-y-6 mt-12">
           <div className="space-y-4">
             <h2 className="text-4xl font-bold leading-tight text-foreground md:text-5xl">
               เรียนรู้เทคโนโลยีรถไฟฟ้า
