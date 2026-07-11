@@ -1,5 +1,5 @@
 import { eq } from "drizzle-orm";
-import { InsertUser, users } from "../drizzle/schema";
+import { InsertUser, users, registrations } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: any = null;
@@ -114,7 +114,7 @@ export async function createRegistration(data: {
     throw new Error("Database not available");
   }
 
-  const { registrations } = await import("../drizzle/schema");
+
   return await db.insert(registrations).values({
     firstName: data.firstName,
     lastName: data.lastName,
@@ -137,7 +137,7 @@ export async function getRegistrations() {
     return [];
   }
 
-  const { registrations } = await import("../drizzle/schema");
+
   return await db.select().from(registrations);
 }
 
@@ -147,7 +147,7 @@ export async function getRegistrationById(id: number) {
     return undefined;
   }
 
-  const { registrations } = await import("../drizzle/schema");
+
   const result = await db.select().from(registrations).where(eq(registrations.id, id)).limit(1);
   return result.length > 0 ? result[0] : undefined;
 }
@@ -158,7 +158,7 @@ export async function getRegistrationByPhone(phone: string) {
     return undefined;
   }
 
-  const { registrations } = await import("../drizzle/schema");
+
   const result = await db.select().from(registrations).where(eq(registrations.phone, phone)).orderBy(registrations.createdAt).limit(1);
   return result.length > 0 ? result[0] : undefined;
 }
@@ -169,7 +169,7 @@ export async function uploadRegistrationSlip(id: number, slipUrl: string) {
     throw new Error("Database not available");
   }
 
-  const { registrations } = await import("../drizzle/schema");
+
   return await db.update(registrations).set({ 
     paymentSlipUrl: slipUrl,
     paymentStatus: "pending" 
@@ -182,6 +182,6 @@ export async function updateRegistrationPaymentStatus(id: number, status: "unpai
     throw new Error("Database not available");
   }
 
-  const { registrations } = await import("../drizzle/schema");
+
   return await db.update(registrations).set({ paymentStatus: status }).where(eq(registrations.id, id));
 }

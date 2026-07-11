@@ -4,6 +4,14 @@ import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, protectedProcedure, router } from "./_core/trpc";
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
+import { 
+  createRegistration, 
+  uploadRegistrationSlip, 
+  getRegistrationByPhone, 
+  getRegistrations, 
+  getRegistrationById, 
+  updateRegistrationPaymentStatus 
+} from "./db";
 
 // Admin-only procedure
 const adminProcedure = protectedProcedure.use(({ ctx, next }) => {
@@ -49,7 +57,7 @@ export const appRouter = router({
         billingAddress: z.string().optional(),
       }))
       .mutation(async ({ input }) => {
-        const { createRegistration } = await import("./db");
+
         try {
           const result = await createRegistration({
             firstName: input.firstName,
@@ -76,7 +84,7 @@ export const appRouter = router({
         paymentSlipUrl: z.string(),
       }))
       .mutation(async ({ input }) => {
-        const { uploadRegistrationSlip } = await import("./db");
+
         try {
           await uploadRegistrationSlip(input.id, input.paymentSlipUrl);
           return { success: true };
@@ -88,7 +96,7 @@ export const appRouter = router({
     checkStatus: publicProcedure
       .input(z.object({ phone: z.string() }))
       .query(async ({ input }) => {
-        const { getRegistrationByPhone } = await import("./db");
+
         const registration = await getRegistrationByPhone(input.phone);
         if (!registration) {
           throw new TRPCError({ code: "NOT_FOUND", message: "ไม่พบข้อมูลการลงทะเบียนสำหรับเบอร์โทรนี้" });
@@ -96,13 +104,13 @@ export const appRouter = router({
         return registration;
       }),
     list: adminProcedure.query(async () => {
-      const { getRegistrations } = await import("./db");
+
       return await getRegistrations();
     }),
     getById: adminProcedure
       .input(z.number())
       .query(async ({ input }) => {
-        const { getRegistrationById } = await import("./db");
+
         return await getRegistrationById(input);
       }),
     updatePaymentStatus: adminProcedure
@@ -111,7 +119,7 @@ export const appRouter = router({
         status: z.enum(["pending", "completed", "failed"]),
       }))
       .mutation(async ({ input }) => {
-        const { updateRegistrationPaymentStatus } = await import("./db");
+
         try {
           await updateRegistrationPaymentStatus(input.id, input.status);
           return { success: true, message: "อัปเดตสถานะสำเร็จ" };
