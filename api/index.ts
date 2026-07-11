@@ -5,7 +5,7 @@ import { registerOAuthRoutes } from "../server/_core/oauth";
 import { registerStorageProxy } from "../server/_core/storageProxy";
 import { appRouter } from "../server/routers";
 import { createContext } from "../server/_core/context";
-import { getDb } from "../server/db";
+import { getDb, _lastDbError } from "../server/db";
 import { sql } from "drizzle-orm";
 
 const app = express();
@@ -31,7 +31,7 @@ app.get("/api/migrate-db", async (req, res) => {
   try {
     const db = await getDb();
     if (!db) {
-      return res.status(500).json({ error: "No DB connection" });
+      return res.status(500).json({ error: "No DB connection", details: String(_lastDbError?.stack || _lastDbError) });
     }
     
     // Execute migrations directly

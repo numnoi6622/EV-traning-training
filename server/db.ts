@@ -5,7 +5,8 @@ import { ENV } from './_core/env';
 let _db: any = null;
 let _pool: any = null;
 
-// Lazily create the drizzle instance so local tooling can run without a DB.
+export let _lastDbError: any = null;
+
 export async function getDb() {
   if (!_db && process.env.DATABASE_URL) {
     try {
@@ -17,8 +18,11 @@ export async function getDb() {
       _db = drizzle(_pool);
     } catch (error) {
       console.warn("[Database] Failed to connect:", error);
+      _lastDbError = error;
       _db = null;
     }
+  } else if (!_db) {
+    _lastDbError = "DATABASE_URL is " + (process.env.DATABASE_URL ? "set" : "empty");
   }
   return _db;
 }
