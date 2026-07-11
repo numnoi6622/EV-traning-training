@@ -17,6 +17,7 @@ export default function AdminDashboard() {
   const [, setLocation] = useLocation();
   const [searchEmail, setSearchEmail] = useState("");
   const [filterCourse, setFilterCourse] = useState("all");
+  const [previewImage, setPreviewImage] = useState<string | null>(null);
 
   // Redirect if not admin
   useEffect(() => {
@@ -269,7 +270,7 @@ export default function AdminDashboard() {
                                 variant="outline" 
                                 size="sm" 
                                 className="w-full text-xs" 
-                                onClick={() => window.open(reg.paymentSlipUrl, "_blank")}
+                                onClick={() => setPreviewImage(reg.paymentSlipUrl!)}
                               >
                                 ดูสลิป
                               </Button>
@@ -295,6 +296,27 @@ export default function AdminDashboard() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Image Preview Modal */}
+      {previewImage && (
+        <div 
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4" 
+          onClick={() => setPreviewImage(null)}
+        >
+          <img 
+            src={previewImage} 
+            alt="Payment Slip Preview" 
+            className="max-w-full max-h-full object-contain rounded-md" 
+          />
+          <Button 
+            variant="destructive" 
+            className="absolute top-4 right-4" 
+            onClick={() => setPreviewImage(null)}
+          >
+            ปิดหน้าต่าง
+          </Button>
+        </div>
+      )}
     </DashboardLayout>
   );
 }
