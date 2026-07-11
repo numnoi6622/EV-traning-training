@@ -103,7 +103,7 @@ export default function AdminDashboard() {
       "อีเมล": reg.email,
       "เบอร์โทร": reg.phone,
       "หลักสูตร": courseTypeLabels[reg.courseType],
-      "วันที่อบรม": new Date(reg.trainingDate).toLocaleDateString("th-TH"),
+      "วันที่อบรม": reg.trainingDate,
       "จำนวนคน": reg.numberOfParticipants,
       "ราคารวม": reg.totalPrice,
       "สถานะชำระเงิน": paymentStatusLabels[reg.paymentStatus],
@@ -262,7 +262,7 @@ export default function AdminDashboard() {
                           </Badge>
                         </TableCell>
                         <TableCell className="text-sm">
-                          {new Date(reg.trainingDate).toLocaleDateString("th-TH")}
+                          {reg.trainingDate}
                         </TableCell>
                         <TableCell className="text-right text-sm">
                           {reg.numberOfParticipants}
