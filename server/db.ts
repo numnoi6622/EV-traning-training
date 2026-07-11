@@ -1,21 +1,18 @@
 import { eq } from "drizzle-orm";
-import { drizzle } from "drizzle-orm/mysql2";
-import * as mysql from "mysql2/promise";
 import { InsertUser, users } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: any = null;
-let _pool: mysql.Pool | null = null;
+let _pool: any = null;
 
 // Lazily create the drizzle instance so local tooling can run without a DB.
 export async function getDb() {
   if (!_db && process.env.DATABASE_URL) {
     try {
+      const { drizzle } = await import("drizzle-orm/mysql2");
+      const mysql = await import("mysql2/promise");
       if (!_pool) {
         _pool = mysql.createPool(process.env.DATABASE_URL);
-        _pool.on('error', (err) => {
-          console.error('[mysql2 pool error]', err);
-        });
       }
       _db = drizzle(_pool);
     } catch (error) {
