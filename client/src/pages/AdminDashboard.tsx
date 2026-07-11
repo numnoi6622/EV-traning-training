@@ -228,6 +228,7 @@ export default function AdminDashboard() {
                       <TableHead className="text-right">จำนวนคน</TableHead>
                       <TableHead className="text-right">ราคารวม</TableHead>
                       <TableHead>สถานะ</TableHead>
+                      <TableHead>ที่อยู่ออกใบเสร็จ</TableHead>
                       <TableHead>จัดการ</TableHead>
                     </TableRow>
                   </TableHeader>
@@ -257,6 +258,9 @@ export default function AdminDashboard() {
                           <Badge className={paymentStatusColors[reg.paymentStatus]}>
                             {paymentStatusLabels[reg.paymentStatus]}
                           </Badge>
+                        </TableCell>
+                        <TableCell className="text-sm">
+                          {reg.billingAddress || "-"}
                         </TableCell>
                         <TableCell>
                           <div className="flex flex-col gap-2 items-start">
