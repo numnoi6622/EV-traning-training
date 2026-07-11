@@ -2,15 +2,18 @@ import { eq } from "drizzle-orm";
 import { InsertUser, users, registrations } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
-import { sql } from "@vercel/postgres";
-import { drizzle } from "drizzle-orm/vercel-postgres";
+import { neon } from "@neondatabase/serverless";
+import { drizzle } from "drizzle-orm/neon-http";
 
 let _db: any = null;
 export let _lastDbError: any = null;
 
 export async function getDb() {
-  if (!_db && process.env.POSTGRES_URL) {
+  const connectionString = process.env.DATABASE_URL || process.env.POSTGRES_URL;
+  
+  if (!_db && connectionString) {
     try {
+      const sql = neon(connectionString);
       _db = drizzle(sql);
     } catch (error) {
       console.warn("[Database] Failed to connect:", error);
@@ -18,7 +21,7 @@ export async function getDb() {
       _db = null;
     }
   } else if (!_db) {
-    _lastDbError = "POSTGRES_URL is " + (process.env.POSTGRES_URL ? "set" : "empty");
+    _lastDbError = "DATABASE_URL is empty. Please check Vercel Environment Variables.";
   }
   return _db;
 }
