@@ -37,7 +37,7 @@ export default function Home() {
         {/* Banner Image */}
         <div className="w-full">
           <img 
-            src="/banner.jpg" 
+            src="/banner.png" 
             alt="EV Training Program Banner" 
             className="w-full h-auto object-cover"
             onError={(e) => {
