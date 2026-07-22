@@ -142,6 +142,11 @@ export default function Payment() {
                 {/* Bank Account Info */}
                 <div className="p-6 bg-secondary/50 rounded-lg text-center space-y-4 border border-border">
                   <h3 className="font-semibold text-lg">ข้อมูลบัญชีสำหรับโอนเงิน</h3>
+                  <div className="space-y-1 text-muted-foreground pb-2">
+                    <p className="font-medium text-foreground text-lg">ธนาคารกรุงไทย (Krungthai Bank)</p>
+                    <p>ชื่อบัญชี: เบิกจ่ายเงินรายได้ -บริการสังคม มทร.ล้านนา เชียงราย</p>
+                    <p className="font-mono text-xl font-bold text-primary">เลขที่บัญชี: 522-0-74465-8</p>
+                  </div>
                   <img src="/payment.jpg" alt="ข้อมูลบัญชี" className="mx-auto rounded-lg shadow-sm max-h-64 object-contain" />
                 </div>
 
