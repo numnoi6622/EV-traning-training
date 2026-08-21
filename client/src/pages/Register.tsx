@@ -41,12 +41,14 @@ export default function Register() {
 
   const courseTypes = [
     { value: "repair", label: "ช่างซ่อมรถไฟฟ้า (5 วัน)" },
+    { value: "repair2", label: "ช่างซ่อมรถไฟฟ้า รุ่นที่ 2 (3 วัน)" },
     { value: "charging", label: "ช่างติดตั้งตู้ชาร์จ (5 วัน)" },
     { value: "users", label: "ผู้สนใจรถไฟฟ้า (1 วัน)" },
   ];
 
   const courseDates: Record<string, {value: string, label: string}[]> = {
     repair: [{ value: "3-10 สิงหาคม 2569", label: "3-10 สิงหาคม 2569" }],
+    repair2: [{ value: "26-28 ตุลาคม", label: "26-28 ตุลาคม" }],
     charging: [{ value: "23-31 สิงหาคม 2569", label: "23-31 สิงหาคม 2569" }],
     users: [{ value: "5 กันยายน 2569", label: "5 กันยายน 2569" }],
   };
@@ -55,6 +57,7 @@ export default function Register() {
 
   const coursePrices: Record<string, number> = {
     repair: 5000,
+    repair2: 5000,
     charging: 5000,
     users: 500,
   };

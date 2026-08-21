@@ -60,6 +60,7 @@ export default function AdminDashboard() {
 
   const courseTypeLabels: Record<string, string> = {
     repair: "ช่างซ่อมรถไฟฟ้า",
+    repair2: "ช่างซ่อมรถไฟฟ้ารุ่น 2",
     charging: "ช่างติดตั้งตู้ชาร์จ",
     users: "ผู้สนใจรถไฟฟ้า",
   };
@@ -195,6 +196,7 @@ export default function AdminDashboard() {
                   <SelectContent>
                     <SelectItem value="all">ทั้งหมด</SelectItem>
                     <SelectItem value="repair">ช่างซ่อมรถไฟฟ้า</SelectItem>
+                    <SelectItem value="repair2">ช่างซ่อมรถไฟฟ้ารุ่น 2</SelectItem>
                     <SelectItem value="charging">ช่างติดตั้งตู้ชาร์จ</SelectItem>
                     <SelectItem value="users">ผู้สนใจรถไฟฟ้า</SelectItem>
                   </SelectContent>

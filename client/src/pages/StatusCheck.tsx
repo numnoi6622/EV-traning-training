@@ -125,6 +125,7 @@ export default function StatusCheck() {
                       <div className="text-muted-foreground">หลักสูตร</div>
                       <div className="font-medium text-right">
                         {registration.courseType === "repair" ? "ช่างซ่อมรถไฟฟ้า" : 
+                         registration.courseType === "repair2" ? "ช่างซ่อมรถไฟฟ้ารุ่น 2" : 
                          registration.courseType === "charging" ? "ช่างติดตั้งตู้ชาร์จ" : "ผู้สนใจรถไฟฟ้า"}
                       </div>
                       
