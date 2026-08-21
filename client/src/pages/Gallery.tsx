@@ -1,11 +1,11 @@
-﻿import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { ArrowLeft, Image as ImageIcon, ExternalLink } from "lucide-react";
 import { Link } from "wouter";
 
 export default function Gallery() {
   const imageCount = 136;
-  const images = Array.from({ length: imageCount }, (_, i) => /gallery/ + (i + 1) + .jpg);
+  const images = Array.from({ length: imageCount }, (_, i) => `/gallery/${i + 1}.jpg`);
 
   return (
     <div className="min-h-screen bg-background text-foreground">
