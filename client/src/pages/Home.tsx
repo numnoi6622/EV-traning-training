@@ -23,6 +23,9 @@ export default function Home() {
             <Link href="/admin-login">
               <Button variant="ghost" size="sm" className="text-xs text-muted-foreground hidden sm:inline-flex">ผู้ดูแลระบบ</Button>
             </Link>
+            <Link href="/gallery">
+              <Button variant="ghost" size="sm" className="font-medium">ภาพบรรยากาศ</Button>
+            </Link>
             <Link href="/status">
               <Button variant="ghost" size="sm" className="text-primary font-medium">เช็คสถานะ</Button>
             </Link>
@@ -61,6 +64,9 @@ export default function Home() {
             </Link>
             <Link href="/status">
               <Button size="lg" variant="secondary" className="border shadow-sm">ตรวจสอบสถานะ</Button>
+            </Link>
+            <Link href="/gallery">
+              <Button size="lg" variant="outline" className="border-primary text-primary shadow-sm">ประมวลภาพบรรยากาศ</Button>
             </Link>
           </div>
         </div>

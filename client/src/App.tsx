@@ -10,6 +10,7 @@ import Payment from "./pages/Payment";
 import AdminLogin from "./pages/AdminLogin";
 import AdminDashboard from "./pages/AdminDashboard";
 import StatusCheck from "./pages/StatusCheck";
+import Gallery from "./pages/Gallery";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
@@ -21,6 +22,7 @@ function Router() {
       <Route path={"/status"} component={StatusCheck} />
       <Route path={"/admin-login"} component={AdminLogin} />
       <Route path={"/admin"} component={AdminDashboard} />
+      <Route path={"/gallery"} component={Gallery} />
       <Route path={"/404"} component={NotFound} />
       {/* Final fallback route */}
       <Route component={NotFound} />
